@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPA Encryption Checker</title>
+    <link rel="icon" href="placeholder" type="image/png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+</head>
+<body>
+    <header>
+        <h1>IPA Encryption Checker</h1>
+        <p>Check if your IPA file(s) are encrypted</p>
+    </header>
+    
+    <main>
+        <div class="upload-container">
+            <h2>Upload Your IPA File</h2>
+            <p>Drop your IPA file below or click to select</p>
+            
+            <div class="drop-area" id="dropArea">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Drag & Drop your IPA file here</p>
+                <p>or</p>
+                <button class="btn" id="selectFileBtn">Select File</button>
+                <input type="file" id="fileInput" accept=".ipa" />
+            </div>
+            
+            <div class="status-indicator">
+                <div class="spinner" id="spinner"></div>
+                <span id="statusText"></span>
+            </div>
+            
+            <div class="error-message" id="errorMessage"></div>
+        </div>
+        
+        <div class="results-container" id="resultsContainer">
+            <div class="results-loading" id="resultsLoading">
+                <div class="spinner" style="display: inline-block;"></div>
+                <p>Analyzing IPA file...</p>
+            </div>
+            
+            <div id="resultsContent" style="display: none;">
+                <h2 id="appName">App Name</h2>
+                
+                <table class="property-table">
+                    <tr>
+                        <th>Property</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td>Display Name</td>
+                        <td id="displayName">-</td>
+                    </tr>
+                    <tr>
+                        <td>Bundle Identifier</td>
+                        <td id="bundleId">-</td>
+                    </tr>
+                    <tr>
+                        <td>Version</td>
+                        <td id="appVersion">-</td>
+                    </tr>
+                    <tr>
+                        <td>Minimum iOS Version</td>
+                        <td id="minIOS">-</td>
+                    </tr>
+                    <tr>
+                        <td>Architecture</td>
+                        <td id="architecture">-</td>
+                    </tr>
+                    <tr>
+                        <td>Encrypted</td>
+                        <td id="encryptionStatus">-</td>
+                    </tr>
+                </table>
+                
+                <div class="file-info">
+                    <h3>Obscura Filename Format:</h3>
+                    <p id="obscuraFilename" style="word-break: break-all;"></p>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <p>Created with ❤️ and 🧻 by Andres99 for the IPA people</p>
+        <p>View the repo on <a href="https://github.com/yourusername/ipa-encryption-checker" target="_blank">GitHub</a></p>
+    </footer>
+    
+    <script src="script.js"></script>
+</body>
+</html>
