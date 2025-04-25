@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const uploadId = generateUploadId();
         
-        fetch('https://your-cloudflare-worker-url.workers.dev/upload', {
+        fetch('https://ipa-encryption-checker.b8ggigb.workers.dev/upload', {
             method: 'POST',
             body: formData,
             headers: {
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsContainer.style.display = 'block';
         
         const checkStatus = () => {
-            fetch(`https://your-cloudflare-worker-url.workers.dev/status/${fileId}`, {
+            fetch(`https://ipa-encryption-checker.b8ggigb.workers.dev/status/${fileId}`, {
                 method: 'GET',
                 headers: {
                     'X-Upload-ID': uploadId
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function cleanupFile(fileId, uploadId) {
-        fetch(`https://your-cloudflare-worker-url.workers.dev/cleanup/${fileId}`, {
+        fetch(`https://ipa-encryption-checker.b8ggigb.workers.dev/cleanup/${fileId}`, {
             method: 'DELETE',
             headers: {
                 'X-Upload-ID': uploadId
