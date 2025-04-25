@@ -129,7 +129,7 @@ jobs:
                   is_encrypted = get_cryptid(macho_file)
                   architecture = get_architecture(macho_file)
                   
-                  # Calculate the MD5 hash of IPA file
+                  # Calculate the MD5 hash of the IPA file
                   md5_hash = hashlib.md5(open(ipa_file_path, 'rb').read()).hexdigest()
                   
                   # Generate an Obscura filename format
@@ -220,7 +220,7 @@ jobs:
           fi
           
           # Send the results back to CDN
-          curl -X POST "https://your-cloudflare-worker-url.workers.dev/update/${{ github.event.client_payload.file_id }}" \
+          curl -X POST "https://ipa-encryption-checker.b8ggigb.workers.dev/update/${{ github.event.client_payload.file_id }}" \
             -H "Content-Type: application/json" \
             -H "X-Upload-ID: ${{ github.event.client_payload.upload_id }}" \
             -d @update_payload.json
