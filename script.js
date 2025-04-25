@@ -9,8 +9,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsLoading = document.getElementById('resultsLoading');
     const resultsContent = document.getElementById('resultsContent');
     
-    const GITHUB_API = 'https://api.github.com/repos/Andres9890/ipa-encryption-checker';
-    const GITHUB_WORKFLOW_ID = 'ipa-analysis.yml';
+    const CLOUDFLARE_WORKER_URL = window.config?.CLOUDFLARE_WORKER_URL || 'https://ipa-encryption-checker.b8ggigb.workers.dev/';
+    
+    console.log('IPA Encryption Checker initialized');
+    console.log('Using Worker URL:', CLOUDFLARE_WORKER_URL);
+    
+    testWorkerConnection();
+    
+    function testWorkerConnection() {
+        console.log('Testing Worker connection...');
+        fetch(`${CLOUDFLARE_WORKER_URL}/test`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Worker connection successful:', data);
+            })
+            .catch(error => {
+                console.error('Worker connection test failed:', error);
+            });
+    }
     
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
         dropArea.addEventListener(eventName, preventDefaults, false);
@@ -66,6 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
+        console.log(`Processing file: ${file.name}, size: ${file.size} bytes`);
+        
         resetUI();
         
         statusText.textContent = `Uploading ${file.name}...`;
@@ -75,8 +98,12 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('file', file);
         
         const uploadId = generateUploadId();
+        console.log(`Generated upload ID: ${uploadId}`);
         
-        fetch('https://ipa-encryption-checker.b8ggigb.workers.dev/upload', {
+        console.log(`Uploading to: ${CLOUDFLARE_WORKER_URL}/upload`);
+        console.log('Headers:', { 'X-Upload-ID': uploadId });
+        
+        fetch(`${CLOUDFLARE_WORKER_URL}/upload`, {
             method: 'POST',
             body: formData,
             headers: {
@@ -84,52 +111,87 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
+            console.log('Upload response status:', response.status);
+            console.log('Response headers:', response.headers);
+            
+            return response.text().then(text => {
+                console.log('Response text:', text);
+                
+                if (!response.ok) {
+                    throw new Error(`Network error: ${response.status} ${text}`);
+                }
+                
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('JSON parse error:', e);
+                    throw new Error(`Invalid JSON response: ${text}`);
+                }
+            });
         })
         .then(data => {
+            console.log('Upload successful, response data:', data);
+            
             statusText.textContent = 'Analyzing IPA file...';
             resultsContainer.style.display = 'block';
             
             pollAnalysisStatus(data.fileId, uploadId);
         })
         .catch(error => {
+            console.error('Upload error:', error);
             showError('Error uploading file: ' + error.message);
         });
     }
     
     function pollAnalysisStatus(fileId, uploadId) {
+        console.log(`Polling status for file: ${fileId}`);
+        
         statusText.textContent = 'Analyzing IPA file...';
         resultsContainer.style.display = 'block';
         
         const checkStatus = () => {
-            fetch(`https://ipa-encryption-checker.b8ggigb.workers.dev/status/${fileId}`, {
+            console.log(`Checking status at: ${CLOUDFLARE_WORKER_URL}/status/${fileId}`);
+            
+            fetch(`${CLOUDFLARE_WORKER_URL}/status/${fileId}`, {
                 method: 'GET',
                 headers: {
                     'X-Upload-ID': uploadId
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        console.error(`Status check error: ${response.status}`, text);
+                        throw new Error(`Status check failed: ${response.status} ${text}`);
+                    });
+                }
+                return response.json();
+            })
             .then(data => {
+                console.log('Status response:', data);
+                
                 if (data.status === 'completed') {
                     if (data.success) {
+                        console.log('Analysis completed successfully');
                         displayResults(data.results);
                         
                         cleanupFile(fileId, uploadId);
                     } else {
+                        console.error('Analysis failed:', data.error);
                         showError('Analysis failed: ' + data.error);
                         cleanupFile(fileId, uploadId);
                     }
                 } else if (data.status === 'failed') {
+                    console.error('Analysis failed:', data.error);
                     showError('Analysis failed: ' + data.error);
                     cleanupFile(fileId, uploadId);
                 } else {
+                    console.log(`Analysis still in progress, status: ${data.status}`);
                     setTimeout(checkStatus, 2000);
                 }
             })
             .catch(error => {
+                console.error('Error checking status:', error);
                 showError('Error checking analysis status: ' + error.message);
             });
         };
@@ -138,7 +200,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function cleanupFile(fileId, uploadId) {
-        fetch(`https://ipa-encryption-checker.b8ggigb.workers.dev/cleanup/${fileId}`, {
+        console.log(`Cleaning up file: ${fileId}`);
+        
+        fetch(`${CLOUDFLARE_WORKER_URL}/cleanup/${fileId}`, {
             method: 'DELETE',
             headers: {
                 'X-Upload-ID': uploadId
@@ -146,24 +210,25 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(response => {
             if (!response.ok) {
-                console.warn('Failed to clean up file from CDN');
+                console.warn(`Cleanup failed: ${response.status}`);
+                return response.text().then(text => {
+                    console.warn('Cleanup response:', text);
+                });
             }
+            console.log('Cleanup successful');
+            return response.json();
+        })
+        .then(data => {
+            console.log('Cleanup response data:', data);
         })
         .catch(error => {
             console.warn('Error cleaning up file:', error);
         });
     }
     
-    function generateUploadId() {
-        const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        let result = '';
-        for (let i = 0; i < 16; i++) {
-            result += chars[Math.floor(Math.random() * chars.length)];
-        }
-        return result;
-    }
-    
     function displayResults(data) {
+        console.log('Displaying results:', data);
+        
         resultsLoading.style.display = 'none';
         resultsContent.style.display = 'block';
         
@@ -190,6 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function showError(message) {
+        console.error('Error:', message);
         spinner.style.display = 'none';
         statusText.textContent = 'Error';
         errorMessage.textContent = message;
@@ -197,6 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function resetUI() {
+        console.log('Resetting UI');
         spinner.style.display = 'none';
         statusText.textContent = '';
         errorMessage.style.display = 'none';
@@ -205,10 +272,10 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsContent.style.display = 'none';
     }
     
-    function generateRandomMD5() {
-        const chars = '0123456789abcdef';
+    function generateUploadId() {
+        const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         let result = '';
-        for (let i = 0; i < 32; i++) {
+        for (let i = 0; i < 16; i++) {
             result += chars[Math.floor(Math.random() * chars.length)];
         }
         return result;
