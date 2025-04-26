@@ -17,6 +17,14 @@ jobs:
         with:
           python-version: '3.9'
           
+      - name: Cache Python dependencies
+        uses: actions/cache@v4.2.3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('.github/workflows/ipa-analysis.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+          
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -219,7 +227,7 @@ jobs:
           EOF
           fi
           
-          # Send the results back to CDN
+          # Send the results back to the CDN
           curl -X POST "https://ipa-encryption-checker.b8ggigb.workers.dev/update/${{ github.event.client_payload.file_id }}" \
             -H "Content-Type: application/json" \
             -H "X-Upload-ID: ${{ github.event.client_payload.upload_id }}" \
