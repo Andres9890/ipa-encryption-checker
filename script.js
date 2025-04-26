@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsContainer = document.getElementById('resultsContainer');
     const resultsLoading = document.getElementById('resultsLoading');
     const resultsContent = document.getElementById('resultsContent');
-    
+
     let CLOUDFLARE_WORKER_URL = window.config?.CLOUDFLARE_WORKER_URL || 'https://ipa-encryption-checker.b8ggigb.workers.dev';
     CLOUDFLARE_WORKER_URL = CLOUDFLARE_WORKER_URL.endsWith('/') 
         ? CLOUDFLARE_WORKER_URL.slice(0, -1) 
