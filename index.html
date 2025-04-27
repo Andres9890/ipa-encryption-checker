@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A website that checks if an IPA file is encrypted via a python script">
+    <meta name="description" content="A website that checks if IPA files are encrypted via a python script">
     <meta name="keywords" content="IPA,archive,iOS,1.0,2.0,3.0,4.0,5.0,6.0,7.0,iPhoneOS,iPadOS,17,18,18.5,encrypted,apple,decrypt,app,iPhone,iPad">
     <meta name="author" content="Andres99">
     <meta property="og:title" content="IPA Encryption Checker">
-    <meta property="og:description" content="A website that checks if an IPA file is encrypted via a python script">
+    <meta property="og:description" content="A website that checks if IPA files are encrypted via a python script">
     <meta property="og:image" content="https://andres9890.github.io/ipa-encryption-checker/icon/IPA_icon.png">
     <meta property="og:url" content="https://andres9890.github.io/ipa-encryption-checker/">
     <meta name="twitter:card" content="summary_large_image">
@@ -19,20 +19,20 @@
 <body>
     <header>
         <h1>IPA Encryption Checker</h1>
-        <p>Check if your IPA file(s) are encrypted (100MB limit)</p>
+        <p>Check if your IPA file(s) are encrypted (100MB limit per file, up to 5 files)</p>
     </header>
     
     <main>
         <div class="upload-container">
-            <h2>Upload Your IPA File</h2>
-            <p>Drop your IPA file below or click to select</p>
+            <h2>Upload Your IPA Files</h2>
+            <p>Drop up to 5 IPA files below or click to select</p>
             
             <div class="drop-area" id="dropArea">
                 <i class="fas fa-cloud-upload-alt"></i>
                 <p>Drag & Drop</p>
                 <p>or</p>
-                <button class="btn" id="selectFileBtn">Select File</button>
-                <input type="file" id="fileInput" accept=".ipa" />
+                <button class="btn" id="selectFileBtn">Select Files</button>
+                <input type="file" id="fileInput" accept=".ipa" multiple />
             </div>
             
             <div class="status-indicator">
@@ -43,49 +43,54 @@
             <div class="error-message" id="errorMessage"></div>
         </div>
         
-        <div class="results-container" id="resultsContainer">
-            <div class="results-loading" id="resultsLoading">
-                <div class="spinner" style="display: inline-block;"></div>
-                <p>Analyzing IPA file(s) (takes about 15-20 seconds)...</p>
-            </div>
-            
-            <div id="resultsContent" style="display: none;">
-                <h2 id="appName">App Name</h2>
+        <div id="filesContainer">
+        </div>
+        
+        <div id="resultsContainerTemplate" style="display: none;">
+            <div class="results-container">
+                <div class="results-loading">
+                    <div class="spinner" style="display: inline-block;"></div>
+                    <p>Analyzing IPA file... (takes about 15-20 seconds)</p>
+                </div>
                 
-                <table class="property-table">
-                    <tr>
-                        <th>Property</th>
-                        <th>Value</th>
-                    </tr>
-                    <tr>
-                        <td>Display Name</td>
-                        <td id="displayName">-</td>
-                    </tr>
-                    <tr>
-                        <td>Bundle Identifier</td>
-                        <td id="bundleId">-</td>
-                    </tr>
-                    <tr>
-                        <td>Version</td>
-                        <td id="appVersion">-</td>
-                    </tr>
-                    <tr>
-                        <td>Minimum iOS Version</td>
-                        <td id="minIOS">-</td>
-                    </tr>
-                    <tr>
-                        <td>Architecture</td>
-                        <td id="architecture">-</td>
-                    </tr>
-                    <tr>
-                        <td>Encrypted</td>
-                        <td id="encryptionStatus">-</td>
-                    </tr>
-                </table>
-                
-                <div class="file-info">
-                    <h3>Obscura Filename Format:</h3>
-                    <p id="obscuraFilename" style="word-break: break-all;"></p>
+                <div class="results-content" style="display: none;">
+                    <h2 class="app-name">App Name</h2>
+                    
+                    <table class="property-table">
+                        <tr>
+                            <th>Property</th>
+                            <th>Value</th>
+                        </tr>
+                        <tr>
+                            <td>Display Name</td>
+                            <td class="display-name">-</td>
+                        </tr>
+                        <tr>
+                            <td>Bundle Identifier</td>
+                            <td class="bundle-id">-</td>
+                        </tr>
+                        <tr>
+                            <td>Version</td>
+                            <td class="app-version">-</td>
+                        </tr>
+                        <tr>
+                            <td>Minimum iOS Version</td>
+                            <td class="min-ios">-</td>
+                        </tr>
+                        <tr>
+                            <td>Architecture</td>
+                            <td class="architecture">-</td>
+                        </tr>
+                        <tr>
+                            <td>Encrypted</td>
+                            <td class="encryption-status">-</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="file-info">
+                        <h3>Obscura Filename Format:</h3>
+                        <p class="obscura-filename" style="word-break: break-all;"></p>
+                    </div>
                 </div>
             </div>
         </div>
