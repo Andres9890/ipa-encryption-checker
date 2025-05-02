@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    initDarkMode();
+    
     const dropArea = document.getElementById('dropArea');
     const fileInput = document.getElementById('fileInput');
     const selectFileBtn = document.getElementById('selectFileBtn');
@@ -350,4 +352,25 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     });
-});//p
+});
+
+function initDarkMode() {
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    if (!darkModeToggle) return;
+    
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const currentTheme = localStorage.getItem('theme') || 
+                        (prefersDarkScheme.matches ? 'dark' : 'light');
+    
+    if (currentTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+    
+    darkModeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        
+        const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+        localStorage.setItem('theme', theme);
+    });//p
+}

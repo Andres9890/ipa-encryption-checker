@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    initDarkMode();
+    
     console.log('Terms of Service page loaded');
     
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -16,7 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-        
+    
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    if (backToTopBtn) {
         backToTopBtn.addEventListener('click', () => {
             window.scrollTo({
                 top: 0,
@@ -25,3 +29,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+function initDarkMode() {
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    if (!darkModeToggle) return;
+    
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const currentTheme = localStorage.getItem('theme') || 
+                        (prefersDarkScheme.matches ? 'dark' : 'light');
+    
+    if (currentTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+    
+    darkModeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        
+        const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+        localStorage.setItem('theme', theme);
+    });//p
+}
