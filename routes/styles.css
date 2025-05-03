@@ -213,6 +213,7 @@ body.dark-mode .terms-container h2 {
 
 body.dark-mode .btn {
     background-color: var(--dark-primary-color);
+    color: var(--light-color);
 }
 
 body.dark-mode .btn:hover {
