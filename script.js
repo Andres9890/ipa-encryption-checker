@@ -65,7 +65,14 @@ document.addEventListener('DOMContentLoaded', () => {
         dropArea.classList.remove('highlight');
     }
     
-    selectFileBtn.addEventListener('click', () => {
+    dropArea.addEventListener('click', (e) => {
+        if (e.target !== selectFileBtn && !selectFileBtn.contains(e.target)) {
+            fileInput.click();
+        }
+    });
+    
+    selectFileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         fileInput.click();
     });
     
@@ -372,5 +379,5 @@ function initDarkMode() {
         
         const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
         localStorage.setItem('theme', theme);
-    });//p
+    });
 }
