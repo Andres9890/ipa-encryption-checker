@@ -4,4 +4,4 @@ A website that checks if an IPA file is encrypted via a python script (provided 
 - frontend is hosted on github pages
 - backend and file uploading is hosted on cloudflare
 
-> This website is licensed under the [GNU General Public License v3.0](https://github.com/Andres9890/ipa-encryption-checker/blob/main/LICENSE).
+> This website is licensed under the [GNU Affero General Public License v3.0](https://github.com/Andres9890/ipa-encryption-checker/blob/main/LICENSE).
