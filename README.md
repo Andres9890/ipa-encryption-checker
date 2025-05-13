@@ -1,5 +1,6 @@
 # [IPA Encryption Checker](https://andres9890.github.io/ipa-encryption-checker/)
 ![License: AGPLLv3](https://img.shields.io/badge/License-AGPLv3-orange.svg)
+![image](icon/IPA_icon.png)
 
 A website that checks if an IPA file is encrypted via a python script (provided by norep on the iOS Obscura discord server, credits to him)
 
