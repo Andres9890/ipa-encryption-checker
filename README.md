@@ -7,3 +7,5 @@ A website that checks if an IPA file is encrypted via a python script (provided 
 
 - frontend is hosted on github pages
 - backend and file uploading is hosted on cloudflare
+
+> [Terms of Service](https://andres9890.github.io/ipa-encryption-checker/terms) | [Privacy Policy](https://andres9890.github.io/ipa-encryption-checker/privacy) | [License](LICENSE)
