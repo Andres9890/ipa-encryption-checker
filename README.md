@@ -3,9 +3,13 @@
 [![IPA Encryption Analysis](https://github.com/Andres9890/ipa-encryption-checker/actions/workflows/ipa-analysis.yml/badge.svg)](https://github.com/Andres9890/ipa-encryption-checker/actions/workflows/ipa-analysis.yml)
 ![image](icon/IPA_icon.png) ![image](ScreenShot_Mobile.jpg)
 
+## description
+
 A website that checks if an IPA file is encrypted via a python script (provided by norep on the iOS Obscura discord server, credits to him)
 
-- frontend is hosted on github pages
-- backend and file uploading is hosted on cloudflare
+## Tech stack
+
+- Frontend is hosted on Github Pages
+- Backend and File uploading is hosted on a CloudFlare worker and CloudFlare R2
 
 > [Terms of Service](https://andres9890.github.io/ipa-encryption-checker/routes/terms) | [Privacy Policy](https://andres9890.github.io/ipa-encryption-checker/routes/privacy) | [License](LICENSE) | [Script](ipa_analyzer.py)
