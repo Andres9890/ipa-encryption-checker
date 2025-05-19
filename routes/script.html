@@ -14,7 +14,7 @@
     <title>IPA Encryption Checker - Python Script</title>
     <link rel="icon" href="icon/IPA_icon.png" type="image/png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="routes/styles.css">
     <style>
         main {
             max-width: 1000px;
@@ -109,6 +109,7 @@
             font-size: 0.9rem;
             line-height: 1.5;
             tab-size: 4;
+            max-width: 100%;
         }
         
         code {
@@ -156,6 +157,37 @@
             pre {
                 font-size: 0.8rem;
             }
+            
+            .code-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .button-group {
+                margin-top: 10px;
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .copy-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+            
+            .copy-success {
+                top: auto;
+                bottom: 10px;
+                right: 10px;
+            }
+            
+            .script-container {
+                padding: 1.25rem;
+            }
+            
+            code {
+                font-size: 0.75rem;
+                line-height: 1.4;
+            }
         }
     </style>
 </head>
@@ -174,7 +206,7 @@
     <main>
         <div class="script-container">
             <h2>IPA Encryption Checker Python Script</h2>
-            <p>This is the Python script used by IPA Encryption Checker to analyze IPA files, Credit to norep on Discord for making the script</p>
+            <p>This is the Python script used by IPA Encryption Checker to analyze IPA files. Credit to norep on Discord for making the script</p>
             <p>You can use this script locally to check if IPA file(s) are encrypted</p>
             
             <div class="code-container">
@@ -385,12 +417,12 @@ if __name__ == "__main__":
         <p>(<a href="./script" style="color: var(--primary); font-weight: 600;">python script</a> was provided by norep on discord, credits to him)<p>
         <p>Check out the repo on <a href="https://github.com/Andres9890/ipa-encryption-checker" style="color: var(--primary); font-weight: 600;">Github</a>, and give it a star while you're at it :)</p>
         <p class="legal-links" style="font-size: 0.8rem; margin-top: 10px; opacity: 0.8;">
-            <a href="./terms" style="color: var(--light-color); margin-right: 10px;">Terms of Service</a>
+            <a href="./terms" style="color: var(--light-color); margin-right: 10px;">Terms of Service</a> | 
             <a href="./privacy" style="color: var(--light-color);">Privacy Policy</a>
         </p>
     </footer>
     
-    <script src="script.js"></script>
+    <script src="routes/script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const copyButton = document.querySelector('.copy-btn');
