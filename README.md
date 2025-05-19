@@ -1,7 +1,7 @@
 # [IPA Encryption Checker](https://andres9890.github.io/ipa-encryption-checker/)
 ![License: AGPLv3](https://img.shields.io/badge/License-MIT-blue.svg)
 [![IPA Encryption Analysis](https://github.com/Andres9890/ipa-encryption-checker/actions/workflows/ipa-analysis.yml/badge.svg)](https://github.com/Andres9890/ipa-encryption-checker/actions/workflows/ipa-analysis.yml)
-![image](icon/IPA_icon.png) ![image](ScreenShot_Mobile.jpg)
+![image](icon/IPA_icon.png) ![image](ScreenShot_Mobile_Dark.jpg)
 
 ## description
 
