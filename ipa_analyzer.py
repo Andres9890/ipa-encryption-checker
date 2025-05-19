@@ -1,4 +1,4 @@
-# This python script was provided by norep on discord (credit to him)
+# This python script was provided by norep on discord
 import os
 import glob
 import shutil
@@ -166,4 +166,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-# This python script was provided by norep on discord (credit to him)
+# This python script was provided by norep on discord
