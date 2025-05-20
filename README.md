@@ -5,8 +5,8 @@
 
 ## Screenshots:
 
-![Mobile Screenshot](Screenshots/ScreenShot_Mobile_Dark.jpg)
-![PC Screenshot](Screenshots/ScreenShot_PC_Dark.png)
+![Mobile Screenshot](Screenshots/ScreenShot_Mobile_Dark.png)
+![PC Screenshot](Screenshots/ScreenShot_PC_dark.png)
 
 ## Description
 
