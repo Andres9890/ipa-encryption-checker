@@ -8,7 +8,7 @@
 ![Mobile Screenshot](Screenshots/ScreenShot_Mobile_Dark.png)
 ![PC Screenshot](Screenshots/ScreenShot_PC_dark.png)
 
-## Description
+## Description:
 
 A website that checks if an IPA file is encrypted via a python script (provided by norep on the iOS Obscura discord server, credits to him)
 
