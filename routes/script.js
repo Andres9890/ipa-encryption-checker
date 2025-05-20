@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     initDarkMode();
     
-    console.log('Terms of Service page loaded');
+    console.log('Terms/Privacy page loaded');
     
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
