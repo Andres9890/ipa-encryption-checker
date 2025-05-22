@@ -5,8 +5,19 @@
 
 ## Screenshots:
 
-![Mobile Screenshot](Screenshots/ScreenShot_Mobile_Dark.png)
-![PC Screenshot](Screenshots/ScreenShot_PC_dark.png)
+<details>
+<summary>Mobile Screenshot</summary>
+  <p float="left">
+  <img width="250" src="Screenshots/ScreenShot_Mobile_Dark.png" />
+  </p>
+</details>
+
+<details>
+<summary>PC Screenshot</summary>
+  <p float="left">
+  <img width="900" src="Screenshots/ScreenShot_PC_dark.png" />
+  </p>
+</details>
 
 ## Description:
 
