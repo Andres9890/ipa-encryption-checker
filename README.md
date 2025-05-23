@@ -6,16 +6,18 @@
 ## Screenshots:
 
 <details>
-<summary>Mobile Screenshot</summary>
+<summary>Mobile Screenshots</summary>
   <p float="left">
   <img width="250" src="Screenshots/ScreenShot_Mobile_Dark.png"/>
+  <img width="250" src="Screenshots/ScreenShot_Mobile_Light.png"/>
   </p>
 </details>
 
 <details>
-<summary>PC Screenshot</summary>
+<summary>PC Screenshots</summary>
   <p float="left">
-  <img width="900" src="Screenshots/ScreenShot_PC_dark.png"/>
+  <img width="900" src="Screenshots/ScreenShot_PC_Dark.png"/>
+  <img width="900" src="Screenshots/ScreenShot_PC_Light.png"/>
   </p>
 </details>
 
