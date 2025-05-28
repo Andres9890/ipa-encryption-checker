@@ -1,5 +1,18 @@
+[Terms of Service Button]: https://img.shields.io/badge/The-Terms-red
+[Terms of Service Link]: https://andres9890.github.io/ipa-encryption-checker/routes/terms 'Terms of Service.'
+
+[Privacy Policy Button]: https://img.shields.io/badge/Privacy-Policy-red
+[Privacy Policy Link]: https://andres9890.github.io/ipa-encryption-checker/routes/privacy 'Privacy Policy.'
+
+[Script Button]: https://img.shields.io/badge/The-Script-green
+[Script Link]: https://andres9890.github.io/ipa-encryption-checker/routes/script 'Python Script.'
+
+
 # [IPA Encryption Checker](https://andres9890.github.io/ipa-encryption-checker/)
-![License: AGPLv3](https://img.shields.io/badge/License-MIT-blue.svg)
+![License: MIT](https://img.shields.io/badge/License-MIT-blue)
+[![Terms of Service Button]][Terms of Service Link] 
+[![Privacy Policy Button]][Privacy Policy Link] 
+[![Script Button]][Script Link]
 [![IPA Encryption Analysis](https://github.com/Andres9890/ipa-encryption-checker/actions/workflows/ipa-analysis.yml/badge.svg)](https://github.com/Andres9890/ipa-encryption-checker/actions/workflows/ipa-analysis.yml)
 <img width="750" src="icon/IPA_icon.png"/>
 
@@ -29,5 +42,3 @@ A website that checks if an IPA file is encrypted via a python script (provided 
 
 - Frontend is hosted on Github Pages
 - Backend and File uploading is hosted on a CloudFlare worker and on CloudFlare R2
-
-> [Terms of Service](https://andres9890.github.io/ipa-encryption-checker/routes/terms) | [Privacy Policy](https://andres9890.github.io/ipa-encryption-checker/routes/privacy) | [License](LICENSE) | [Script](https://andres9890.github.io/ipa-encryption-checker/routes/script)
