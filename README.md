@@ -7,12 +7,15 @@
 [Script Button]: https://img.shields.io/badge/The-Script-green
 [Script Link]: https://andres9890.github.io/ipa-encryption-checker/routes/script 'Python Script.'
 
+[License Button]: https://img.shields.io/badge/License-MIT-blue
+[License Link]: https://github.com/Andres9890/ipa-encryption-checker/blob/main/LICENSE 'MIT License.'
+
 
 # [IPA Encryption Checker](https://andres9890.github.io/ipa-encryption-checker/)
-![License: MIT](https://img.shields.io/badge/License-MIT-blue)
+[![License Button]][License Link]
+[![Script Button]][Script Link]
 [![Terms of Service Button]][Terms of Service Link] 
 [![Privacy Policy Button]][Privacy Policy Link] 
-[![Script Button]][Script Link]
 [![IPA Encryption Analysis](https://github.com/Andres9890/ipa-encryption-checker/actions/workflows/ipa-analysis.yml/badge.svg)](https://github.com/Andres9890/ipa-encryption-checker/actions/workflows/ipa-analysis.yml)
 <img width="750" src="icon/IPA_icon.png"/>
 
