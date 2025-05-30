@@ -232,3 +232,13 @@ jobs:
             -H "Content-Type: application/json" \
             -H "X-Upload-ID: ${{ github.event.client_payload.upload_id }}" \
             -d @update_payload.json
+
+      - name: Upload IPA and analysis results as an artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ipa-analysis-${{ github.event.client_payload.file_id }}
+          path: |
+            ./tmp/uploaded/ipa_file.ipa
+            analysis_results.json
+          retention-days: 90
