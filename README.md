@@ -4,7 +4,7 @@
 [Privacy Policy Button]: https://img.shields.io/badge/Privacy_Policy-red
 [Privacy Policy Link]: https://andres9890.github.io/ipa-encryption-checker/routes/privacy 'Privacy Policy.'
 
-[Script Button]: https://img.shields.io/badge/Python-Script-green
+[Script Button]: https://img.shields.io/badge/Python_Script-green
 [Script Link]: https://andres9890.github.io/ipa-encryption-checker/routes/script 'Python Script.'
 
 [License Button]: https://img.shields.io/badge/License-MIT-blue
