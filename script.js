@@ -312,11 +312,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function showFileError(container, message) {
-        console.error('Error:', message);
-        
-        const loadingElement = container.querySelector('.results-loading');
-        loadingElement.innerHTML = `<div class="error-message">${message}</div>`;
-    }
+    console.error('Error:', message);
+
+    const loadingElement = container.querySelector('.results-loading');
+
+    loadingElement.textContent = ''; 
+
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.textContent = message;
+
+    loadingElement.appendChild(errorDiv);
+}
     
     function showError(message) {
         console.error('Error:', message);
