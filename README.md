@@ -10,9 +10,13 @@
 [License Button]: https://img.shields.io/badge/License-MIT-blue
 [License Link]: https://github.com/Andres9890/ipa-encryption-checker/blob/main/LICENSE 'MIT License.'
 
+[Vulnerabilities Button]: https://img.shields.io/badge/Vulnerabilities-1-yellow
+[Vulnerabilities Link]: https://github.com/Andres9890/ipa-encryption-checker/blob/main/VULNERABILITIES.md 'Vulnerabilities.'
+
 
 # [IPA Encryption Checker](https://andres9890.github.io/ipa-encryption-checker/) (IEC)
 [![License Button]][License Link]
+[![Vulnerabilities Button]][Vulnerabilities Link]
 [![Script Button]][Script Link]
 [![Terms of Service Button]][Terms of Service Link] 
 [![Privacy Policy Button]][Privacy Policy Link] 
