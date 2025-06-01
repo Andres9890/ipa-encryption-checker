@@ -53,3 +53,16 @@ A website that checks if an IPA file is encrypted via a python script (provided 
 ## How to build/set up:
 
 coming soon™
+
+## Roadmap
+
+a list of todos and upcoming feature
+
+  - [ ] account registration with firebase
+  - [ ] more than 100MB uploads
+  - [ ] how to build/set up docs
+  - [ ] save analysis results as a .json file
+  - [ ] allow for a 90 day downloadable link for hosting the ipa and the results
+  - [ ] make the user be able to see the previous analysis
+  - [ ] upload the cloudflare worker's code
+  - [x] get the website to run in the first place
