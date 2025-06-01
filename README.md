@@ -64,5 +64,5 @@ a list of todos and upcoming feature
   - [ ] save analysis results as a .json file
   - [ ] allow for a 90 day downloadable link for hosting the ipa and the results
   - [ ] make the user be able to see the previous analysis
-  - [ ] upload the cloudflare worker's code
+  - [x] upload the cloudflare worker's code
   - [x] get the website to run in the first place
