@@ -1,6 +1,6 @@
 // THE Cloudflare Worker script for THE IPA Encryption Checker (made by Andres99)
 
-// List of allowed origins for CORS requests. Replace {placeholder} with your actual GitHub username or use a custom domain.
+// List of allowed origins for CORS requests
 const ALLOWED_ORIGINS = [
   'https://placeholder.github.io' // place your actual github username (lowercase) (or place a custom domain)
 ];
@@ -304,7 +304,7 @@ async function triggerGitHubWorkflow(fileId, uploadId, env, ctx) {
     sessionData.fileUploadDate = new Date().toISOString();
     await env.KV_SESSIONS.put(fileId, JSON.stringify(sessionData), { expirationTtl: 3600 });
     // Prepares the GitHub API request
-    const GITHUB_PAT = env.GITHUB_PAT;
+    const GITHUB_PAT = env.GITHUB_PAT; // make a GITHUB_PAT secert in your cloudflare worker with your github token
     const GITHUB_USERNAME = env.GITHUB_USERNAME || 'placeholder'; // replace with your actual github username
     const REPO_NAME = env.REPO_NAME || 'placeholder'; // replace with your actual github repo name
     console.log(`Sending GitHub API request to ${GITHUB_USERNAME}/${REPO_NAME}`);
