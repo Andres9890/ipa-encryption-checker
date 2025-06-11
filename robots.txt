@@ -1,0 +1,7 @@
+# If you have any questions about this, ask them on the Github repo
+
+User-agent: *
+Disallow: /Screenshots/
+Disallow: /.github/
+Disallow: /script.js
+Disallow: /styles.css
