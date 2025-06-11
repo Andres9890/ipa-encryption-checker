@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://andres9890.github.io/ipa-encryption-checker/</loc>
+  <lastmod>2025-06-11T17:28:50+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://andres9890.github.io/ipa-encryption-checker/routes/terms</loc>
+  <lastmod>2025-06-11T17:28:50+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://andres9890.github.io/ipa-encryption-checker/routes/privacy</loc>
+  <lastmod>2025-06-11T17:28:50+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://andres9890.github.io/ipa-encryption-checker/routes/script</loc>
+  <lastmod>2025-06-11T17:28:50+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+
+
+</urlset>
