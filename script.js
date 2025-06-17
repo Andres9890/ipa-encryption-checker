@@ -22,22 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('IPA Encryption Checker initialized');
     console.log('Using Worker URL:', CLOUDFLARE_WORKER_URL);
     
-    async function getUserIP() {
-        try {
-            const response = await fetch('https://api.ipify.org?format=json');
-            const data = await response.json();
-            userIP = data.ip;
-            console.log('User IP:', userIP);
-            return userIP;
-        } catch (error) {
-            console.error('Error getting IP:', error);
-            return null;
-        }
-    }
-    
-    getUserIP().then(() => {
-        testWorkerConnection();
-    });
+    testWorkerConnection();
     
     function testWorkerConnection() {
         console.log('Testing Worker connection...');
@@ -50,9 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(data => {
                 console.log('Worker connection successful:', data);
-                if (data.ip && !userIP) {
+                if (data.ip) {
                     userIP = data.ip;
-                    console.log('Updated IP from worker:', userIP);
+                    console.log('User IP from worker:', userIP);
                 }
             })
             .catch(error => {
@@ -172,17 +157,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const loadingElement = resultContainer.querySelector('.results-loading');
         loadingElement.querySelector('p').textContent = `Uploading ${file.name}...`;
         
-        const headers = {
-            'X-Upload-ID': uploadId
-        };
-        if (userIP) {
-            headers['X-User-IP'] = userIP;
-        }
-        
         fetch(`${CLOUDFLARE_WORKER_URL}/upload`, {
             method: 'POST',
             body: formData,
-            headers: headers
+            headers: {
+                'X-Upload-ID': uploadId
+            }
         })
         .then(response => {
             return response.text().then(text => {
@@ -203,9 +183,9 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             console.log(`Upload successful for ${fileId}, response data:`, data);
             
-            if (data.ip && !userIP) {
+            if (data.ip) {
                 userIP = data.ip;
-                console.log('Updated IP from upload response:', userIP);
+                console.log('User IP from upload response:', userIP);
             }
             
             loadingElement.querySelector('p').textContent = `Analyzing ${file.name}...`;
@@ -232,19 +212,14 @@ document.addEventListener('DOMContentLoaded', () => {
         
         console.log(`Polling status for file: ${cloudFileId}`);
         
-        const headers = {
-            'X-Upload-ID': uploadId
-        };
-        if (userIP) {
-            headers['X-User-IP'] = userIP;
-        }
-        
         const checkStatus = () => {
             console.log(`Checking status at: ${CLOUDFLARE_WORKER_URL}/status/${cloudFileId}`);
             
             fetch(`${CLOUDFLARE_WORKER_URL}/status/${cloudFileId}`, {
                 method: 'GET',
-                headers: headers
+                headers: {
+                    'X-Upload-ID': uploadId
+                }
             })
             .then(response => {
                 if (!response.ok) {
@@ -258,9 +233,9 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 console.log(`Status response for ${fileId}:`, data);
                 
-                if (data.ip && !userIP) {
+                if (data.ip) {
                     userIP = data.ip;
-                    console.log('Updated IP from status response:', userIP);
+                    console.log('User IP from status response:', userIP);
                 }
                 
                 if (data.status === 'completed') {
