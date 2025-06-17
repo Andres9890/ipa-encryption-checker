@@ -399,11 +399,21 @@ if __name__ == "__main__":
             <ol>
                 <li>Make sure you have Python installed</li>
                 <li>Install the required packages:
-                    <pre><code>pip install macholib rich</code></pre>
+                    <div style="position: relative; display: inline-block; width: 100%;">
+                      <pre><code id="pipInstallCode">pip install macholib rich</code></pre>
+                      <button class="floatingCopyBtn" data-target="pipInstallCode" title="Copy code" style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.5); border: none; border-radius: 50%; padding: 6px; cursor: pointer; z-index: 2; box-shadow: 0 1px 4px rgba(0,0,0,0.08);">
+                        <i class="fas fa-copy" style="color: #333; opacity: 0.7; font-size: 1.1rem;"></i>
+                      </button>
+                    </div>
                 </li>
                 <li>Save the script to a file</li>
                 <li>Run the script with your IPA file:
-                    <pre><code>python ipa_analyzer.py /path/to/your/ipa.ipa</code></pre>
+                    <div style="position: relative; display: inline-block; width: 100%;">
+                      <pre><code id="runScriptCode">python ipa_analyzer.py /path/to/your/ipa.ipa</code></pre>
+                      <button class="floatingCopyBtn" data-target="runScriptCode" title="Copy code" style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.5); border: none; border-radius: 50%; padding: 6px; cursor: pointer; z-index: 2; box-shadow: 0 1px 4px rgba(0,0,0,0.08);">
+                        <i class="fas fa-copy" style="color: #333; opacity: 0.7; font-size: 1.1rem;"></i>
+                      </button>
+                    </div>
                 </li>
             </ol>
             
@@ -430,6 +440,31 @@ if __name__ == "__main__":
             if (copyButton) {
                 copyButton.addEventListener('click', copyCode);
             }
+            const floatingCopyBtn = document.getElementById('floatingCopyBtn');
+            if (floatingCopyBtn) {
+                floatingCopyBtn.addEventListener('click', copyCode);
+            }
+            document.querySelectorAll('.floatingCopyBtn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const codeId = btn.getAttribute('data-target');
+                    const codeElement = document.getElementById(codeId);
+                    if (codeElement) {
+                        const textToCopy = codeElement.textContent;
+                        const textarea = document.createElement('textarea');
+                        textarea.value = textToCopy;
+                        textarea.setAttribute('readonly', '');
+                        textarea.style.position = 'absolute';
+                        textarea.style.left = '-9999px';
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                        btn.style.opacity = '0.5';
+                        setTimeout(() => { btn.style.opacity = '1'; }, 800);
+                    }
+                });
+            });
         });
         
         function copyCode() {
