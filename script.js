@@ -98,40 +98,36 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function handleFiles(fileList) {
         const files = Array.from(fileList);
-        
         const ipaFiles = files.filter(file => file.name.endsWith('.ipa'));
-        
         if (ipaFiles.length === 0) {
             showError('Please upload valid .ipa file(s)');
             return;
         }
-        
+        const turnstileToken = window.turnstile && window.turnstile.getResponse && window.turnstile.getResponse();
+        if (!turnstileToken) {
+            showError('Please complete the CAPTCHA before uploading.');
+            return;
+        }
         const filesToProcess = ipaFiles.slice(0, MAX_FILES);
-        
         if (ipaFiles.length > MAX_FILES) {
             showError(`Only the first ${MAX_FILES} IPA files will be processed. You selected ${ipaFiles.length} files.`);
         }
-        
         resetUI();
-        
         filesToProcess.forEach(file => {
-            processFile(file);
+            processFile(file, turnstileToken);
         });
     }
     
-    function processFile(file) {
+    function processFile(file, turnstileToken) {
         console.log(`Processing file: ${file.name}, size: ${file.size} bytes`);
-        
         const fileId = generateUploadId();
         const resultContainer = createResultContainer(file, fileId);
-        
         activeUploads.set(fileId, {
             file: file,
             status: 'uploading',
             container: resultContainer
         });
-        
-        uploadFile(file, fileId, resultContainer);
+        uploadFile(file, fileId, resultContainer, turnstileToken);
     }
     
     function createResultContainer(file, fileId) {
@@ -147,16 +143,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return resultContainer;
     }
     
-    function uploadFile(file, fileId, resultContainer) {
+    function uploadFile(file, fileId, resultContainer, turnstileToken) {
         const formData = new FormData();
         formData.append('file', file);
-        
+        if (turnstileToken) {
+            formData.append('cf-turnstile-response', turnstileToken);
+        }
         const uploadId = generateUploadId();
         console.log(`Generated upload ID: ${uploadId} for file ${fileId}`);
-        
         const loadingElement = resultContainer.querySelector('.results-loading');
         loadingElement.querySelector('p').textContent = `Uploading ${file.name}...`;
-        
         fetch(`${CLOUDFLARE_WORKER_URL}/upload`, {
             method: 'POST',
             body: formData,
