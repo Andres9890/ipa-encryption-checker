@@ -49,12 +49,15 @@ document.addEventListener('DOMContentLoaded', () => {
             sitekey: '0x4AAAAAABhgWAV1LEZrb_6J',
             callback: function(token) {
                 turnstileToken = token;
-                turnstileWrapper.style.display = 'none';
-                turnstileWidgetId = null;
-                if (pendingFileList) {
-                    handleFiles(pendingFileList, true);
-                    pendingFileList = null;
-                }
+                setTimeout(() => {
+                    turnstileWrapper.innerHTML = '';
+                    turnstileWrapper.style.display = 'none';
+                    turnstileWidgetId = null;
+                    if (pendingFileList) {
+                        handleFiles(pendingFileList, true);
+                        pendingFileList = null;
+                    }
+                }, 200);
             },
             'expired-callback': function() {
                 turnstileToken = null;
