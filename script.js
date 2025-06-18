@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let turnstileWidgetId = null;
     let turnstileToken = null;
     const turnstileWrapper = document.getElementById('cf-turnstile-wrapper');
+    let pendingFileList = null;
     function showCaptcha() {
         if (turnstileWrapper.style.display !== 'block') {
             turnstileWrapper.style.display = 'block';
@@ -48,6 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
             sitekey: '0x4AAAAAABhgWAV1LEZrb_6J',
             callback: function(token) {
                 turnstileToken = token;
+                turnstileWrapper.style.display = 'none';
+                turnstileWidgetId = null;
+                if (pendingFileList) {
+                    handleFiles(pendingFileList, true);
+                    pendingFileList = null;
+                }
             },
             'expired-callback': function() {
                 turnstileToken = null;
@@ -123,23 +130,27 @@ document.addEventListener('DOMContentLoaded', () => {
         fileInput.click();
     });
     
-    fileInput.addEventListener('change', () => {
+    fileInput.addEventListener('change', (e) => {
+        turnstileToken = null;
+        pendingFileList = e.target.files;
         showCaptcha();
     });
     
-    dropArea.addEventListener('drop', () => {
+    dropArea.addEventListener('drop', (e) => {
+        turnstileToken = null;
+        pendingFileList = e.dataTransfer.files;
         showCaptcha();
     });
     
-    function handleFiles(fileList) {
+    function handleFiles(fileList, skipCaptchaCheck) {
         const files = Array.from(fileList);
         const ipaFiles = files.filter(file => file.name.endsWith('.ipa'));
         if (ipaFiles.length === 0) {
             showError('Please upload valid .ipa file(s)');
             return;
         }
-        if (!turnstileToken) {
-            showError('Please complete the CAPTCHA before uploading.');
+        if (!turnstileToken && !skipCaptchaCheck) {
+            pendingFileList = fileList;
             showCaptcha();
             return;
         }
