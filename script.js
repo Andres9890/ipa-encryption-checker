@@ -24,6 +24,48 @@ document.addEventListener('DOMContentLoaded', () => {
     
     testWorkerConnection();
     
+    let turnstileWidgetId = null;
+    let turnstileToken = null;
+    const turnstileWrapper = document.getElementById('cf-turnstile-wrapper');
+    function showCaptcha() {
+        if (turnstileWrapper.style.display !== 'block') {
+            turnstileWrapper.style.display = 'block';
+            if (!window.turnstile) {
+                const script = document.createElement('script');
+                script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+                script.async = true;
+                script.defer = true;
+                document.body.appendChild(script);
+                script.onload = renderCaptcha;
+            } else {
+                renderCaptcha();
+            }
+        }
+    }
+    function renderCaptcha() {
+        if (turnstileWidgetId !== null) return;
+        turnstileWidgetId = window.turnstile.render('#cf-turnstile-wrapper', {
+            sitekey: '0x4AAAAAABhgWAV1LEZrb_6J',
+            callback: function(token) {
+                turnstileToken = token;
+            },
+            'expired-callback': function() {
+                turnstileToken = null;
+            },
+            'error-callback': function() {
+                turnstileToken = null;
+            }
+        });
+    }
+    function resetCaptcha() {
+        if (window.turnstile && turnstileWidgetId !== null) {
+            window.turnstile.reset(turnstileWidgetId);
+            turnstileToken = null;
+        }
+        turnstileWrapper.style.display = 'none';
+        turnstileWidgetId = null;
+    }
+    
     function testWorkerConnection() {
         console.log('Testing Worker connection...');
         fetch(`${CLOUDFLARE_WORKER_URL}/test`)
@@ -81,20 +123,13 @@ document.addEventListener('DOMContentLoaded', () => {
         fileInput.click();
     });
     
-    fileInput.addEventListener('change', handleFileSelect);
+    fileInput.addEventListener('change', () => {
+        showCaptcha();
+    });
     
-    dropArea.addEventListener('drop', handleFileDrop);
-    
-    function handleFileDrop(e) {
-        const dt = e.dataTransfer;
-        const files = dt.files;
-        
-        handleFiles(files);
-    }
-    
-    function handleFileSelect(e) {
-        handleFiles(e.target.files);
-    }
+    dropArea.addEventListener('drop', () => {
+        showCaptcha();
+    });
     
     function handleFiles(fileList) {
         const files = Array.from(fileList);
@@ -103,9 +138,9 @@ document.addEventListener('DOMContentLoaded', () => {
             showError('Please upload valid .ipa file(s)');
             return;
         }
-        const turnstileToken = window.turnstile && window.turnstile.getResponse && window.turnstile.getResponse();
         if (!turnstileToken) {
             showError('Please complete the CAPTCHA before uploading.');
+            showCaptcha();
             return;
         }
         const filesToProcess = ipaFiles.slice(0, MAX_FILES);
@@ -351,6 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
         errorMessage.style.display = 'none';
         filesContainer.innerHTML = '';
         activeUploads.clear();
+        resetCaptcha();
     }
     
     function generateUploadId() {

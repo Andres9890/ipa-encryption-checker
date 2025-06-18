@@ -40,6 +40,7 @@
                 <button class="btn" id="selectFileBtn">Select Files</button>
                 <input type="file" id="fileInput" accept=".ipa" multiple />
             </div>
+            <div id="cf-turnstile-wrapper" style="display:none; margin-top: 1.5rem; text-align:center;"></div>
             
             <div class="status-indicator">
                 <div class="spinner" id="spinner"></div>
@@ -48,9 +49,6 @@
             
             <div class="error-message" id="errorMessage"></div>
         </div>
-        
-        <div id="cf-turnstile" class="cf-turnstile" data-sitekey="0x4AAAAAABhgWAV1LEZrb_6J"></div>
-        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
         
         <div id="filesContainer">
         </div>
