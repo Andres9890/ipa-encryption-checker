@@ -1,5 +1,5 @@
 # If you have any questions about this, ask them on the Github repo
-# Sitemap: https://ipachecker.backupbot.net/sitemap.xml
+# Sitemap: https://ipachecker.com/sitemap.xml
 
 User-agent: *
 Disallow: /Screenshots/
