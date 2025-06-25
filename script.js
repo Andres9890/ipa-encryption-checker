@@ -10,71 +10,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const filesContainer = document.getElementById('filesContainer');
     const resultsContainerTemplate = document.getElementById('resultsContainerTemplate');
 
-    let CLOUDFLARE_WORKER_URL = window.config?.CLOUDFLARE_WORKER_URL || 'https://ipa-checker.andres99990.workers.dev';
+    let CLOUDFLARE_WORKER_URL = window.config?.CLOUDFLARE_WORKER_URL || 'https://ipa-encryption-checker.b8ggigb.workers.dev';
     CLOUDFLARE_WORKER_URL = CLOUDFLARE_WORKER_URL.endsWith('/') 
         ? CLOUDFLARE_WORKER_URL.slice(0, -1) 
         : CLOUDFLARE_WORKER_URL;
     
     const MAX_FILES = 5;
     const activeUploads = new Map();
-    let userIP = null;
     
     console.log('IPA Encryption Checker initialized');
     console.log('Using Worker URL:', CLOUDFLARE_WORKER_URL);
     
     testWorkerConnection();
-    
-    let turnstileWidgetId = null;
-    let turnstileToken = null;
-    const turnstileWrapper = document.getElementById('cf-turnstile-wrapper');
-    let pendingFileList = null;
-    function showCaptcha() {
-        if (turnstileWrapper.style.display !== 'block') {
-            turnstileWrapper.style.display = 'block';
-            if (!window.turnstile) {
-                const script = document.createElement('script');
-                script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
-                script.async = true;
-                script.defer = true;
-                document.body.appendChild(script);
-                script.onload = renderCaptcha;
-            } else {
-                renderCaptcha();
-            }
-        }
-    }
-    function renderCaptcha() {
-        if (turnstileWidgetId !== null) return;
-        turnstileWidgetId = window.turnstile.render('#cf-turnstile-wrapper', {
-            sitekey: '0x4AAAAAABhgWAV1LEZrb_6J',
-            callback: function(token) {
-                turnstileToken = token;
-                setTimeout(() => {
-                    turnstileWrapper.innerHTML = '';
-                    turnstileWrapper.style.display = 'none';
-                    turnstileWidgetId = null;
-                    if (pendingFileList) {
-                        handleFiles(pendingFileList, true);
-                        pendingFileList = null;
-                    }
-                }, 200);
-            },
-            'expired-callback': function() {
-                turnstileToken = null;
-            },
-            'error-callback': function() {
-                turnstileToken = null;
-            }
-        });
-    }
-    function resetCaptcha() {
-        if (window.turnstile && turnstileWidgetId !== null) {
-            window.turnstile.reset(turnstileWidgetId);
-            turnstileToken = null;
-        }
-        turnstileWrapper.style.display = 'none';
-        turnstileWidgetId = null;
-    }
     
     function testWorkerConnection() {
         console.log('Testing Worker connection...');
@@ -87,10 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(data => {
                 console.log('Worker connection successful:', data);
-                if (data.ip) {
-                    userIP = data.ip;
-                    console.log('User IP from worker:', userIP);
-                }
             })
             .catch(error => {
                 console.error('Worker connection test failed:', error);
@@ -133,50 +76,57 @@ document.addEventListener('DOMContentLoaded', () => {
         fileInput.click();
     });
     
-    fileInput.addEventListener('change', (e) => {
-        turnstileToken = null;
-        pendingFileList = e.target.files;
-        showCaptcha();
-    });
+    fileInput.addEventListener('change', handleFileSelect);
     
-    dropArea.addEventListener('drop', (e) => {
-        turnstileToken = null;
-        pendingFileList = e.dataTransfer.files;
-        showCaptcha();
-    });
+    dropArea.addEventListener('drop', handleFileDrop);
     
-    function handleFiles(fileList, skipCaptchaCheck) {
+    function handleFileDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        
+        handleFiles(files);
+    }
+    
+    function handleFileSelect(e) {
+        handleFiles(e.target.files);
+    }
+    
+    function handleFiles(fileList) {
         const files = Array.from(fileList);
+        
         const ipaFiles = files.filter(file => file.name.endsWith('.ipa'));
+        
         if (ipaFiles.length === 0) {
             showError('Please upload valid .ipa file(s)');
             return;
         }
-        if (!turnstileToken && !skipCaptchaCheck) {
-            pendingFileList = fileList;
-            showCaptcha();
-            return;
-        }
+        
         const filesToProcess = ipaFiles.slice(0, MAX_FILES);
+        
         if (ipaFiles.length > MAX_FILES) {
             showError(`Only the first ${MAX_FILES} IPA files will be processed. You selected ${ipaFiles.length} files.`);
         }
+        
         resetUI();
+        
         filesToProcess.forEach(file => {
-            processFile(file, turnstileToken);
+            processFile(file);
         });
     }
     
-    function processFile(file, turnstileToken) {
+    function processFile(file) {
         console.log(`Processing file: ${file.name}, size: ${file.size} bytes`);
+        
         const fileId = generateUploadId();
         const resultContainer = createResultContainer(file, fileId);
+        
         activeUploads.set(fileId, {
             file: file,
             status: 'uploading',
             container: resultContainer
         });
-        uploadFile(file, fileId, resultContainer, turnstileToken);
+        
+        uploadFile(file, fileId, resultContainer);
     }
     
     function createResultContainer(file, fileId) {
@@ -192,16 +142,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return resultContainer;
     }
     
-    function uploadFile(file, fileId, resultContainer, turnstileToken) {
+    function uploadFile(file, fileId, resultContainer) {
         const formData = new FormData();
         formData.append('file', file);
-        if (turnstileToken) {
-            formData.append('cf-turnstile-response', turnstileToken);
-        }
+        
         const uploadId = generateUploadId();
         console.log(`Generated upload ID: ${uploadId} for file ${fileId}`);
+        
         const loadingElement = resultContainer.querySelector('.results-loading');
         loadingElement.querySelector('p').textContent = `Uploading ${file.name}...`;
+        
         fetch(`${CLOUDFLARE_WORKER_URL}/upload`, {
             method: 'POST',
             body: formData,
@@ -227,11 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             console.log(`Upload successful for ${fileId}, response data:`, data);
-            
-            if (data.ip) {
-                userIP = data.ip;
-                console.log('User IP from upload response:', userIP);
-            }
             
             loadingElement.querySelector('p').textContent = `Analyzing ${file.name}...`;
             
@@ -278,11 +223,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 console.log(`Status response for ${fileId}:`, data);
                 
-                if (data.ip) {
-                    userIP = data.ip;
-                    console.log('User IP from status response:', userIP);
-                }
-                
                 if (data.status === 'completed') {
                     if (data.success) {
                         console.log(`Analysis completed successfully for ${fileId}`);
@@ -308,8 +248,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .catch(error => {
-                console.error(`Status check error for ${fileId}:`, error);
-                showFileError(container, `Error checking status: ${error.message}`);
+                console.error(`Error checking status for ${fileId}:`, error);
+                showFileError(container, `Error checking analysis status: ${error.message}`);
             });
         };
         
@@ -400,7 +340,6 @@ document.addEventListener('DOMContentLoaded', () => {
         errorMessage.style.display = 'none';
         filesContainer.innerHTML = '';
         activeUploads.clear();
-        resetCaptcha();
     }
     
     function generateUploadId() {

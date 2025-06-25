@@ -8,8 +8,8 @@
     <meta name="author" content="Andres99">
     <meta property="og:title" content="IPA Encryption Checker - Python Script">
     <meta property="og:description" content="Python script for IPA Encryption Checker">
-    <meta property="og:image" content="https://ipachecker.com/icon/IPA_icon.png">
-    <meta property="og:url" content="https://ipachecker.com/routes/script">
+    <meta property="og:image" content="https://andres9890.github.io/ipa-encryption-checker/icon/IPA_icon.png">
+    <meta property="og:url" content="https://andres9890.github.io/ipa-encryption-checker/routes/script">
     <meta name="twitter:card" content="summary_large_image">
     <title>IPA Encryption Checker - Python Script</title>
     <link rel="icon" href="../icon/IPA_icon.png" type="image/png">
@@ -199,7 +199,7 @@
                 <i class="fas fa-moon dark-icon"></i>
             </div>
         </div>
-        <a href="https://ipachecker.com/" style="text-decoration: none; color: inherit;"><h1>IPA Encryption Checker</h1></a>
+        <a href="https://andres9890.github.io/ipa-encryption-checker/" style="text-decoration: none; color: inherit;"><h1>IPA Encryption Checker</h1></a>
         <p>Python Script</p>
     </header>
     
@@ -399,33 +399,23 @@ if __name__ == "__main__":
             <ol>
                 <li>Make sure you have Python installed</li>
                 <li>Install the required packages:
-                    <div style="position: relative; display: inline-block; width: 100%;">
-                      <pre><code id="pipInstallCode">pip install macholib rich</code></pre>
-                      <button class="floatingCopyBtn" data-target="pipInstallCode" title="Copy code" style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.5); border: none; border-radius: 50%; padding: 6px; cursor: pointer; z-index: 2; box-shadow: 0 1px 4px rgba(0,0,0,0.08);">
-                        <i class="fas fa-copy" style="color: #333; opacity: 0.7; font-size: 1.1rem;"></i>
-                      </button>
-                    </div>
+                    <pre><code>pip install macholib rich</code></pre>
                 </li>
                 <li>Save the script to a file</li>
                 <li>Run the script with your IPA file:
-                    <div style="position: relative; display: inline-block; width: 100%;">
-                      <pre><code id="runScriptCode">python ipa_analyzer.py /path/to/your/ipa.ipa</code></pre>
-                      <button class="floatingCopyBtn" data-target="runScriptCode" title="Copy code" style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.5); border: none; border-radius: 50%; padding: 6px; cursor: pointer; z-index: 2; box-shadow: 0 1px 4px rgba(0,0,0,0.08);">
-                        <i class="fas fa-copy" style="color: #333; opacity: 0.7; font-size: 1.1rem;"></i>
-                      </button>
-                    </div>
+                    <pre><code>python ipa_analyzer.py /path/to/your/ipa.ipa</code></pre>
                 </li>
             </ol>
             
             <div class="return-link">
-                <a href="https://ipachecker.com" class="btn"><i class="fas fa-arrow-left"></i> Return to Home</a>
+                <a href="https://andres9890.github.io/ipa-encryption-checker" class="btn"><i class="fas fa-arrow-left"></i> Return to Home</a>
             </div>
         </div>
     </main>
     
     <footer>
         <p>Created with ❤️ and 🧻 by Andres99 for the IPA people</p>
-        <p>Check out the repository on <a href="https://github.com/Andres9890/ipa-encryption-checker" style="color: var(--primary); font-weight: 600;">Github</a>, and give it a star while you're at it :)</p>
+        <p>Check out the repo on <a href="https://github.com/Andres9890/ipa-encryption-checker" style="color: var(--primary); font-weight: 600;">Github</a>, and give it a star while you're at it :)</p>
         <p class="legal-links" style="font-size: 0.8rem; margin-top: 10px; opacity: 0.8;">
             <a href="./terms" style="color: var(--light-color); margin-right: 10px;">Terms of Service</a>
             <a href="./privacy" style="color: var(--light-color); margin-right: 10px;">Privacy Policy</a>
@@ -440,31 +430,6 @@ if __name__ == "__main__":
             if (copyButton) {
                 copyButton.addEventListener('click', copyCode);
             }
-            const floatingCopyBtn = document.getElementById('floatingCopyBtn');
-            if (floatingCopyBtn) {
-                floatingCopyBtn.addEventListener('click', copyCode);
-            }
-            document.querySelectorAll('.floatingCopyBtn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const codeId = btn.getAttribute('data-target');
-                    const codeElement = document.getElementById(codeId);
-                    if (codeElement) {
-                        const textToCopy = codeElement.textContent;
-                        const textarea = document.createElement('textarea');
-                        textarea.value = textToCopy;
-                        textarea.setAttribute('readonly', '');
-                        textarea.style.position = 'absolute';
-                        textarea.style.left = '-9999px';
-                        document.body.appendChild(textarea);
-                        textarea.select();
-                        document.execCommand('copy');
-                        document.body.removeChild(textarea);
-                        btn.style.opacity = '0.5';
-                        setTimeout(() => { btn.style.opacity = '1'; }, 800);
-                    }
-                });
-            });
         });
         
         function copyCode() {
