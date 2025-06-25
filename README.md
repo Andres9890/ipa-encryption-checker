@@ -53,7 +53,7 @@ A website that checks if an IPA file is encrypted via a python script (provided 
 ## How to build/set up:
 
 >[!WARNING]
-> You must use this [version of the repository](https://github.com/Andres9890/ipa-encryption-checker/blob/f0943a34818eb567183ce9cac47c90c7b2a8c177) in order for things to work
+> You must use this [`tutorial branch`](https://github.com/Andres9890/ipa-encryption-checker/tree/tutorial) of the repository in order for things to work
 
 ### Prerequisites
 
