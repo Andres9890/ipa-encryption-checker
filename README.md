@@ -50,6 +50,9 @@ A website that checks if an IPA file is encrypted via a python script (provided 
 - Frontend is hosted on Github Pages
 - Backend and File uploading is hosted on a CloudFlare Worker and on CloudFlare R2
 
+## Contact:
+Contact me through [email](mailto:andres@ipachecker.com) if you have any questions
+
 ## How to build/set up:
 
 >[!WARNING]
