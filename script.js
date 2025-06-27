@@ -370,8 +370,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         container.querySelector('.obscura-filename').textContent = data.obscuraFilename;
 
-        const downloadIpaBtn = container.querySelector('#download-ipa-btn');
-        const downloadResultsBtn = container.querySelector('#download-results-btn');
+        const downloadIpaBtn = container.querySelector('.download-ipa-btn');
+        const downloadResultsBtn = container.querySelector('.download-results-btn');
         downloadIpaBtn.disabled = true;
         downloadResultsBtn.disabled = true;
         fetch(`${CLOUDFLARE_WORKER_URL}/nightly-link`)
