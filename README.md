@@ -149,7 +149,7 @@ a list of todos and upcoming feature
   - [ ] more than 100MB uploads
   - [x] how to build/set up docs
   - [ ] save analysis results as a .json file
-  - [ ] allow for a 90 day downloadable link for hosting the ipa and the results
+  - [x] allow for a 90 day downloadable link for hosting the ipa and the results
   - [ ] make the user be able to see the previous analysis
   - [x] upload the cloudflare worker's code
   - [x] get the website to run in the first place

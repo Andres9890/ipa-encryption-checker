@@ -400,3 +400,28 @@ body.dark-mode footer a[style*="color: var(--primary)"] {
         font-size: 0.9rem;
     }
 }
+
+.download-btn {
+    background-color: #254e8e;
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.3rem;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0.5rem;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+    box-shadow: 0 2px 6px rgba(37, 78, 142, 0.08);
+}
+.download-btn:hover {
+    background-color: #3566b3;
+    opacity: 0.95;
+}
+body.dark-mode .download-btn {
+    background-color: #3566b3;
+    color: #e2e8f0;
+}
+body.dark-mode .download-btn:hover {
+    background-color: #254e8e;
+}
