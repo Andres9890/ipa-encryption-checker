@@ -374,21 +374,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const downloadResultsBtn = container.querySelector('.download-results-btn');
         downloadIpaBtn.disabled = true;
         downloadResultsBtn.disabled = true;
-        fetch(`${CLOUDFLARE_WORKER_URL}/nightly-link`)
-            .then(res => res.json())
-            .then(links => {
-                if (links.ipa) {
-                    downloadIpaBtn.onclick = () => window.open(links.ipa, '_blank');
-                    downloadIpaBtn.disabled = false;
-                }
-                if (links.results) {
-                    downloadResultsBtn.onclick = () => window.open(links.results, '_blank');
-                    downloadResultsBtn.disabled = false;
-                }
-            })
-            .catch(err => {
-                console.warn('Could not fetch Nightly.link URLs:', err);
-            });
+
+        if (data.downloadLinks && data.downloadLinks.ipa) {
+            downloadIpaBtn.onclick = () => window.open(data.downloadLinks.ipa, '_blank');
+            downloadIpaBtn.disabled = false;
+        }
+        if (data.downloadLinks && data.downloadLinks.results) {
+            downloadResultsBtn.onclick = () => window.open(data.downloadLinks.results, '_blank');
+            downloadResultsBtn.disabled = false;
+        }
     }
     
     function showFileError(container, message) {
@@ -448,33 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    async function showNightlyLinks() {
-        const owner = "Andres9890";
-        const repo = "ipa-encryption-checker";
-        const artifactNames = ["ipa", "results"];
-
-        const runsRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/runs?per_page=1`);
-        const runsData = await runsRes.json();
-        if (!runsData.workflow_runs || runsData.workflow_runs.length === 0) return;
-        const runId = runsData.workflow_runs[0].id;
-
-        const artifactsRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/runs/${runId}/artifacts`);
-        const artifactsData = await artifactsRes.json();
-
-        artifactNames.forEach(name => {
-            const artifact = artifactsData.artifacts.find(a => a.name === name);
-            if (artifact) {
-                const nightlyLink = `https://nightly.link/${owner}/${repo}/actions/runs/${runId}/${name}.zip`;
-                const linkElem = document.getElementById(`nightly-link-${name}`);
-                if (linkElem) {
-                    linkElem.href = nightlyLink;
-                    linkElem.style.display = "inline";
-                }
-            }
-        });
-    }
-
-    showNightlyLinks();
+    
 });
 
 function initDarkMode() {
