@@ -29,6 +29,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ github.event.inputs.target_branch }}
+          fetch-depth: 0
 
       - name: Configure Git author
         run: |
