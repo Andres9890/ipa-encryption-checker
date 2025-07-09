@@ -1,5 +1,5 @@
 # If you have any questions about this, ask them on the Github repo
-# Sitemap: https://ipachecker.backupbot.net/sitemap.xml
+# Sitemap: https://andres9890.github.io/ipa-encryption-checker/sitemap.xml
 
 User-agent: *
 Disallow: /Screenshots/
@@ -15,5 +15,4 @@ Disallow: /routes/script.js
 Allow: /index.html
 Allow: /terms.html
 Allow: /privacy.html
-Allow: /sitemap.xml
-Allow: /routes/
+Allow: /sitemap.xmlAllow: /routes/

@@ -1,11 +1,11 @@
 [Terms of Service Button]: https://img.shields.io/badge/Terms_of_Service-red
-[Terms of Service Link]: https://ipachecker.backupbot.net/routes/terms 'Terms of Service.'
+[Terms of Service Link]: https://andres9890.github.io/ipa-encryption-checker/routes/terms 'Terms of Service.'
 
 [Privacy Policy Button]: https://img.shields.io/badge/Privacy_Policy-red
-[Privacy Policy Link]: https://ipachecker.backupbot.net/routes/privacy 'Privacy Policy.'
+[Privacy Policy Link]: https://andres9890.github.io/ipa-encryption-checker/routes/privacy 'Privacy Policy.'
 
 [Script Button]: https://img.shields.io/badge/Python_Script-green
-[Script Link]: https://ipachecker.backupbot.net/routes/script 'Python Script.'
+[Script Link]: https://andres9890.github.io/ipa-encryption-checker/routes/script 'Python Script.'
 
 [License Button]: https://img.shields.io/badge/License-MIT-blue
 [License Link]: https://github.com/Andres9890/ipa-encryption-checker/blob/main/LICENSE 'MIT License.'
@@ -14,7 +14,7 @@
 [Vulnerabilities Link]: https://github.com/Andres9890/ipa-encryption-checker/blob/main/VULNERABILITIES.md 'Vulnerabilities.'
 
 
-# [IPA Encryption Checker](https://ipachecker.backupbot.net/) (IEC)
+# [IPA Encryption Checker](https://andres9890.github.io/ipa-encryption-checker/) (IEC)
 [![License Button]][License Link]
 [![Vulnerabilities Button]][Vulnerabilities Link]
 [![Script Button]][Script Link]
