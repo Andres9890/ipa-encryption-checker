@@ -1,0 +1,62 @@
+name: Revert commits
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_shas:
+        description: "One or more commit SHAs to revert (space- or comma-separated, oldest first)."
+        required: true
+        type: string
+      target_branch:
+        description: "Branch to push the revert commit(s) to"
+        default: "main"
+        type: string
+      custom_message:
+        description: "Optional custom commit message (overrides Git's default)"
+        required: false
+        type: string
+
+jobs:
+  revert:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.event.inputs.target_branch }}
+
+      - name: Configure Git author
+        run: |
+          git config user.name  "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Parse commit list
+        id: parse
+        run: |
+          # Convert comma → space, collapse whitespace
+          shas="$(echo "${{ github.event.inputs.commit_shas }}" | tr ',' ' ' | xargs)"
+          echo "sha_list=$shas" >>"$GITHUB_OUTPUT"
+
+      - name: Revert selected commits
+        env:
+          SHAS: ${{ steps.parse.outputs.sha_list }}
+          MSG:  ${{ github.event.inputs.custom_message }}
+        run: |
+          set -euo pipefail
+          for sha in $SHAS; do
+            echo "Reverting $sha"
+            git revert --no-edit "$sha"
+          done
+
+          if [ -n "$MSG" ]; then
+            git commit --amend -m "$MSG"
+          fi
+
+      - name: Push revert commit
+        run: |
+          git push origin HEAD:${{ github.event.inputs.target_branch }}
