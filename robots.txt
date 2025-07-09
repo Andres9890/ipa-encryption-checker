@@ -15,4 +15,5 @@ Disallow: /routes/script.js
 Allow: /index.html
 Allow: /terms.html
 Allow: /privacy.html
-Allow: /sitemap.xmlAllow: /routes/
+Allow: /sitemap.xml
+Allow: /routes/
