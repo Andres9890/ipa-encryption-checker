@@ -4,20 +4,16 @@
 [Privacy Policy Button]: https://img.shields.io/badge/Privacy_Policy-red
 [Privacy Policy Link]: https://ipachecker.qzz.io/routes/privacy 'Privacy Policy.'
 
-[Script Button]: https://img.shields.io/badge/Python_Script-green
-[Script Link]: https://ipachecker.qzz.io/routes/script 'Python Script.'
+[Package Button]: https://img.shields.io/badge/Python_Package-green
+[Package Link]: https://ipachecker.qzz.io/routes/package 'Python Package.'
 
 [License Button]: https://img.shields.io/badge/License-MIT-blue
 [License Link]: https://github.com/Andres9890/ipa-encryption-checker/blob/main/LICENSE 'MIT License.'
 
-[Vulnerabilities Button]: https://img.shields.io/badge/Vulnerabilities-1-yellow
-[Vulnerabilities Link]: https://github.com/Andres9890/ipa-encryption-checker/blob/main/VULNERABILITIES.md 'Vulnerabilities.'
-
 
 # [IPA Encryption Checker](https://ipachecker.qzz.io/) (IEC)
 [![License Button]][License Link]
-[![Vulnerabilities Button]][Vulnerabilities Link]
-[![Script Button]][Script Link]
+[![Package Button]][Package Link]
 [![Terms of Service Button]][Terms of Service Link] 
 [![Privacy Policy Button]][Privacy Policy Link] 
 [![IPA Encryption Analysis](https://github.com/Andres9890/ipa-encryption-checker/actions/workflows/ipa-analysis.yml/badge.svg)](https://github.com/Andres9890/ipa-encryption-checker/actions/workflows/ipa-analysis.yml)
@@ -51,7 +47,7 @@ A website that checks if an IPA file is encrypted via a python script (provided 
 - Backend and File uploading is hosted on a CloudFlare Worker and on CloudFlare R2
 
 ## Contact:
-Contact me through [email](mailto:andres@ipachecker.com) if you have any questions
+Contact me through [email](mailto:andres@ipachecker.qzz.io) if you have any questions
 
 ## How to build/set up:
 

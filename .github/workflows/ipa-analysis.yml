@@ -21,14 +21,15 @@ jobs:
         uses: actions/cache@v4.2.3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('.github/workflows/ipa-analysis.yml') }}
+          key: ${{ runner.os }}-pip-ipachecker-${{ hashFiles('.github/workflows/ipa-analysis.yml') }}
           restore-keys: |
+            ${{ runner.os }}-pip-ipachecker-
             ${{ runner.os }}-pip-
           
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install macholib rich requests
+          pip install ipachecker requests
           
       - name: Create temp directory
         run: mkdir -p ./tmp/uploaded
@@ -51,163 +52,19 @@ jobs:
       - name: Run IPA analysis
         id: analysis
         run: |
-          # Create a modified version of the script to save results as JSON
-          cat > ipa_analyzer.py << 'EOF'
-          import os
-          import glob
-          import shutil
-          import zipfile
-          import hashlib
-          import plistlib
-          import macholib.mach_o
-          import macholib.MachO
-          import json
-          from rich.console import Console
-          from rich.table import Table
-
-          console = Console()
-          EXTRACT_DIR = "./tmp/extracted/classifier"
-
-          def extract_ipa(ipa_file_path: str) -> str:
-              if os.path.exists(EXTRACT_DIR): 
-                  shutil.rmtree(EXTRACT_DIR)
-              os.makedirs(EXTRACT_DIR, exist_ok=True)
-
-              console.log(f"Extracting IPA {ipa_file_path}")
-              # IPAs are just zip files, I can open them with zipfile
-              with zipfile.ZipFile(ipa_file_path, 'r') as ipa_zip:
-                  ipa_zip.extractall(EXTRACT_DIR)
-
-              return EXTRACT_DIR
-
-          def get_properties(extract_dir: str):
-              console.log("Reading app metadata...")
-              info_plist = glob.glob(os.path.join(extract_dir, "Payload", "*.app", 'Info.plist'))
-
-              if not info_plist:
-                  console.log("Error: Malformed IPA: .app directory not found")
-                  return None
-              
-              info_plist = info_plist[0]
-
-              with open(info_plist, "rb") as plist:
-                  plist_data = plistlib.load(plist)
-                  # some older iPhoneOS 2.0 ipa properties are missing the MinimumOSVersion
-                  # this isn't written to actual Info.plist, just to the plist in memory so the script doesn't freak out
-                  if plist_data.get("MinimumOSVersion") is None:
-                      plist_data["MinimumOSVersion"] = "2.0"
-                  return plist_data
-
-          def get_cryptid(filename: str) -> bool:
-              # read the mach-o headers
-              macho = macholib.MachO.MachO(filename)
-              for header in macho.headers:
-                  load_commands = header.commands
-                  for load_command in load_commands:
-                      if isinstance(load_command[1], macholib.mach_o.encryption_info_command):
-                          # encrypted :(
-                          if load_command[1].cryptid == 0:
-                              return False
-                      if isinstance(load_command[1], macholib.mach_o.encryption_info_command_64):
-                          # encrypted :( (64-bit cryptid)
-                          if load_command[1].cryptid == 0:
-                              return False
-                  return True
-
-          def get_architecture(filename: str) -> str:
-              # thanks to https://iphonedev.wiki/Mach-O_File_Format#CPU_Type
-              macho = macholib.MachO.MachO(filename)
-              supports_32 = False
-              supports_64 = False
-
-              for header in macho.headers:
-                  if header.header.cputype == 16777228: # ARM64
-                      supports_64 = True
-                  if header.header.cputype == 12: # ARMv7 and ARMv7s(hopefully ?)
-                      supports_32 = True
-                      
-              if supports_32 and supports_64:
-                  return "Universal"
-              elif supports_64:
-                  return "64-bit"
-              else:
-                  return "32-bit"
-
-          def analyze_ipa(ipa_file_path: str) -> dict:
-              try:
-                  extract_dir = extract_ipa(ipa_file_path)
-                  properties = get_properties(extract_dir)
-                  
-                  if not properties:
-                      return {"error": "Failed to read IPA properties"}
-                      
-                  exec_name = properties.get("CFBundleExecutable")
-                  macho_file = glob.glob(os.path.join(extract_dir, "Payload", "*.app", exec_name))[0]
-                  is_encrypted = get_cryptid(macho_file)
-                  architecture = get_architecture(macho_file)
-                  
-                  # Calculate the MD5 hash of the IPA file
-                  md5_hash = hashlib.md5(open(ipa_file_path, 'rb').read()).hexdigest()
-                  
-                  # Generate an Obscura filename format
-                  obscura_filename = f"{properties.get('CFBundleDisplayName')}-({properties.get('CFBundleIdentifier')})-{properties.get('CFBundleVersion')}-(iOS_{properties.get('MinimumOSVersion')})-{md5_hash}.ipa"
-                  
-                  return {
-                      "appName": properties.get("CFBundleName", "Unknown"),
-                      "displayName": properties.get("CFBundleDisplayName", properties.get("CFBundleName", "Unknown")),
-                      "bundleId": properties.get("CFBundleIdentifier", "Unknown"),
-                      "appVersion": properties.get("CFBundleVersion", "Unknown"),
-                      "minIOS": properties.get("MinimumOSVersion", "Unknown"),
-                      "architecture": architecture,
-                      "encrypted": is_encrypted,
-                      "obscuraFilename": obscura_filename,
-                      "md5": md5_hash
-                  }
-              except Exception as e:
-                  import traceback
-                  traceback.print_exc()
-                  return {"error": str(e)}
-
-          if __name__ == "__main__":
-              import sys
-              
-              if len(sys.argv) < 2:
-                  print("Usage: python ipa_analyzer.py <path_to_ipa>")
-                  sys.exit(1)
-                  
-              ipa_path = sys.argv[1]
-              
-              if not os.path.exists(ipa_path):
-                  print(f"Error: IPA file not found at {ipa_path}")
-                  sys.exit(1)
-                  
-              results = analyze_ipa(ipa_path)
-              
-              # Save results as a JSON file
-              with open('analysis_results.json', 'w') as f:
-                  json.dump(results, f, indent=2)
-                  
-              # and print to console
-              if "error" in results:
-                  print(f"Error analyzing IPA: {results['error']}")
-                  sys.exit(1)
-              else:
-                  table = Table(title=results["displayName"])
-                  table.add_column("Property")
-                  table.add_column("Value")
-                  table.add_row("Name", results["appName"])
-                  table.add_row("Display Name", results["displayName"])
-                  table.add_row("Identifier", results["bundleId"])
-                  table.add_row("Version", results["appVersion"])
-                  table.add_row("Target iOS", results["minIOS"])
-                  table.add_row("Architecture", results["architecture"])
-                  table.add_row("Encrypted", "YES" if results["encrypted"] else "NO")
-                  console.print(table)
-                  print(f"Obscura-format filename: \n{results['obscuraFilename']}")
-          EOF
+          # Run ipachecker on uploaded IPA file
+          echo "Analyzing IPA file with ipachecker"
+          ipachecker "./tmp/uploaded/ipa_file.ipa" --json --output analysis_results.json --quiet
           
-          # now Run the analyzer
-          python ipa_analyzer.py "./tmp/uploaded/ipa_file.ipa"
+          # Check if analysis was successful
+          if [ ! -f "analysis_results.json" ]; then
+            echo "Error: Analysis failed to create results file"
+            exit 1
+          fi
+          
+          # Display results for logging
+          echo "Analysis completed successfully!"
+          cat analysis_results.json
         
       - name: Send results back to CDN
         if: always()
