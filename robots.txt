@@ -1,5 +1,5 @@
 # If you have any questions about this, ask them on the Github repo
-# Sitemap: https://andres9890.github.io/ipa-encryption-checker/sitemap.xml
+# Sitemap: https://ipachecker.qzz.io/sitemap.xml
 
 User-agent: *
 Disallow: /Screenshots/
