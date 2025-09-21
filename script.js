@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderCaptcha() {
         if (turnstileWidgetId !== null) return;
         turnstileWidgetId = window.turnstile.render('#cf-turnstile-wrapper', {
-            sitekey: '0x4AAAAAABhgWAV1LEZrb_6J',
+            sitekey: '0x4AAAAAAB2Y8Apb9QGveJmP',
             callback: function(token) {
                 turnstileToken = token;
                 setTimeout(() => {
