@@ -38,6 +38,15 @@ jobs:
           # Download the IPA file from the pre-signed URL provided by CDN
           # client_payload is passed by the repository_dispatch event
           curl -L "${{ github.event.client_payload.file_url }}" -o ./tmp/uploaded/ipa_file.ipa
+
+      - name: Upload IPA as an artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+         name: ipa-file-${{ github.event.client_payload.file_id }}
+         path: ./tmp/uploaded/ipa_file.ipa
+         retention-days: 90
+
         
       - name: Run IPA analysis
         id: analysis
@@ -228,18 +237,10 @@ jobs:
           fi
           
           # Send the results back to the CDN
-          curl -X POST "https://ipa-checker.andres99990.workers.dev/update/${{ github.event.client_payload.file_id }}" \
+          curl -X POST "https://ipacheck.fndres195.workers.dev/update/${{ github.event.client_payload.file_id }}" \
             -H "Content-Type: application/json" \
             -H "X-Upload-ID: ${{ github.event.client_payload.upload_id }}" \
             -d @update_payload.json
-
-      - name: Upload IPA as an artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-         name: ipa-file-${{ github.event.client_payload.file_id }}
-         path: ./tmp/uploaded/ipa_file.ipa
-         retention-days: 90
 
       - name: Upload analysis results as an artifact
         if: always()
