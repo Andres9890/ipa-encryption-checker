@@ -94,7 +94,7 @@ jobs:
           fi
           
           # Send the results back to the CDN
-          curl -X POST "https://ipacheck.fndres195.workers.dev/update/${{ github.event.client_payload.file_id }}" \
+          curl -X POST "https://api.ipachecker.qzz.io/update/${{ github.event.client_payload.file_id }}" \
             -H "Content-Type: application/json" \
             -H "X-Upload-ID: ${{ github.event.client_payload.upload_id }}" \
             -d @update_payload.json

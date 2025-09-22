@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const filesContainer = document.getElementById('filesContainer');
     const resultsContainerTemplate = document.getElementById('resultsContainerTemplate');
 
-    let CLOUDFLARE_WORKER_URL = window.config?.CLOUDFLARE_WORKER_URL || 'https://ipacheck.fndres195.workers.dev';
+    let CLOUDFLARE_WORKER_URL = window.config?.CLOUDFLARE_WORKER_URL || 'https://api.ipachecker.qzz.io';
     CLOUDFLARE_WORKER_URL = CLOUDFLARE_WORKER_URL.endsWith('/') 
         ? CLOUDFLARE_WORKER_URL.slice(0, -1) 
         : CLOUDFLARE_WORKER_URL;
