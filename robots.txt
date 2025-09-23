@@ -1,19 +1,20 @@
-# If you have any questions about this, ask them on the Github repo
+# If you have any questions about this, ask them on the Github repo or via our contact email (andres@ipachecker.qzz.io)
 # Sitemap: https://ipachecker.qzz.io/sitemap.xml
 
 User-agent: *
-Disallow: /Screenshots/
 Disallow: /.git/
 Disallow: /.github/
-Disallow: /script.js
-Disallow: /styles.css
 Disallow: /LICENSE
 Disallow: /README.md
-Disallow: /routes/styles.css
-Disallow: /routes/script.js
 
 Allow: /index.html
+Allow: /Screenshots/
+Allow: /script.js
+Allow: /styles.css
+Allow: /routes/styles.css
+Allow: /routes/script.js
 Allow: /terms.html
+Allow: /404.html
 Allow: /privacy.html
 Allow: /sitemap.xml
 Allow: /routes/
