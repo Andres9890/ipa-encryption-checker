@@ -35,10 +35,17 @@ jobs:
         run: mkdir -p ./tmp/uploaded
           
       - name: Download IPA file from Cloudflare R2
+        env:
+          API_SECRET_KEY: ${{ secrets.API_SECRET_KEY }}
         run: |
-          # Download the IPA file from the pre-signed URL provided by CDN
-          # client_payload is passed by the repository_dispatch event
-          curl -L "${{ github.event.client_payload.file_url }}" -o ./tmp/uploaded/ipa_file.ipa
+          if [ -z "$API_SECRET_KEY" ]; then
+            echo "Error: API_SECRET_KEY secret not configured"
+            exit 1
+          fi
+          
+          curl -L "${{ github.event.client_payload.file_url }}" \
+            -H "X-API-Key: $API_SECRET_KEY" \
+            -o ./tmp/uploaded/ipa_file.ipa
 
       - name: Upload IPA as an artifact
         if: always()
@@ -68,7 +75,14 @@ jobs:
         
       - name: Send results back to CDN
         if: always()
+        env:
+          API_SECRET_KEY: ${{ secrets.API_SECRET_KEY }}
         run: |
+          if [ -z "$API_SECRET_KEY" ]; then
+            echo "Error: API_SECRET_KEY secret not configured"
+            exit 1
+          fi
+          
           # Check if analysis was successful
           if [ -f "analysis_results.json" ]; then
             # Read the analysis results
@@ -97,6 +111,7 @@ jobs:
           curl -X POST "https://api.ipachecker.qzz.io/update/${{ github.event.client_payload.file_id }}" \
             -H "Content-Type: application/json" \
             -H "X-Upload-ID: ${{ github.event.client_payload.upload_id }}" \
+            -H "X-API-Key: $API_SECRET_KEY" \
             -d @update_payload.json
 
       - name: Upload analysis results as an artifact
