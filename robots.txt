@@ -5,7 +5,7 @@ User-agent: *
 Disallow: /.git/
 Disallow: /.github/
 Disallow: /LICENSE
-Disallow: /README.md
+Disallow: /*.md
 
 Allow: /index.html
 Allow: /Screenshots/
@@ -14,7 +14,6 @@ Allow: /styles.css
 Allow: /routes/styles.css
 Allow: /routes/script.js
 Allow: /terms.html
-Allow: /404.html
 Allow: /privacy.html
 Allow: /sitemap.xml
 Allow: /routes/
