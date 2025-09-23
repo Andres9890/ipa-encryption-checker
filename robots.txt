@@ -1,19 +1,32 @@
-# If you have any questions about this, ask them on the Github repo
-# Sitemap: https://ipachecker.qzz.io/sitemap.xml
+# If you have any questions about this, ask them on the Github repo or via our contact email (andres@ipachecker.qzz.io)
+Sitemap: https://ipachecker.qzz.io/sitemap.xml
 
 User-agent: *
-Disallow: /Screenshots/
 Disallow: /.git/
 Disallow: /.github/
-Disallow: /script.js
-Disallow: /styles.css
 Disallow: /LICENSE
-Disallow: /README.md
-Disallow: /routes/styles.css
-Disallow: /routes/script.js
+Disallow: /*.md
 
+# Main pages and assets
 Allow: /index.html
-Allow: /terms.html
-Allow: /privacy.html
+Allow: /404.html
+Allow: /
 Allow: /sitemap.xml
+Allow: /robots.txt
+
+# CSS and JavaScript
+Allow: /styles.css
+Allow: /script.js
+Allow: /routes/styles.css
+Allow: /routes/script.js
+
+# Icon and image directories
+Allow: /icon/
+Allow: /Screenshots/
+
+# All routes pages
 Allow: /routes/
+Allow: /routes/terms
+Allow: /routes/privacy
+Allow: /routes/package
+Allow: /routes/declaration
