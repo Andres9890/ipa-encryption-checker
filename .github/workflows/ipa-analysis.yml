@@ -43,9 +43,52 @@ jobs:
             exit 1
           fi
           
-          curl -L "${{ github.event.client_payload.file_url }}" \
+          echo "Downloading IPA file from: ${{ github.event.client_payload.file_url }}"
+          echo "File ID: ${{ github.event.client_payload.file_id }}"
+          echo "Upload ID: ${{ github.event.client_payload.upload_id }}"
+          
+          # Download with both API key and upload ID for authentication
+          HTTP_CODE=$(curl -L "${{ github.event.client_payload.file_url }}" \
             -H "X-API-Key: $API_SECRET_KEY" \
-            -o ./tmp/uploaded/ipa_file.ipa
+            -H "X-Upload-ID: ${{ github.event.client_payload.upload_id }}" \
+            -w "%{http_code}" \
+            -o ./tmp/uploaded/ipa_file.ipa \
+            --max-time 300 \
+            --retry 3 \
+            --retry-delay 5)
+          
+          echo "Download HTTP response code: $HTTP_CODE"
+          
+          # Check if download was successful
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "Error: Failed to download IPA file. HTTP code: $HTTP_CODE"
+            if [ -f "./tmp/uploaded/ipa_file.ipa" ]; then
+              echo "Response content:"
+              head -c 1000 ./tmp/uploaded/ipa_file.ipa
+            fi
+            exit 1
+          fi
+          
+          # Check if file exists and has content
+          if [ ! -f "./tmp/uploaded/ipa_file.ipa" ] || [ ! -s "./tmp/uploaded/ipa_file.ipa" ]; then
+            echo "Error: Downloaded file is empty or doesn't exist"
+            exit 1
+          fi
+          
+          # Verify it's a valid ZIP file (IPA files are ZIP archives)
+          FILE_TYPE=$(file ./tmp/uploaded/ipa_file.ipa)
+          echo "Downloaded file type: $FILE_TYPE"
+          
+          if ! echo "$FILE_TYPE" | grep -q "Zip archive"; then
+            echo "Error: Downloaded file is not a ZIP archive"
+            echo "File size: $(stat -c%s ./tmp/uploaded/ipa_file.ipa) bytes"
+            echo "File content preview:"
+            head -c 100 ./tmp/uploaded/ipa_file.ipa
+            exit 1
+          fi
+          
+          echo "IPA file downloaded successfully!"
+          echo "File size: $(stat -c%s ./tmp/uploaded/ipa_file.ipa) bytes"
 
       - name: Upload IPA as an artifact
         if: always()
@@ -59,13 +102,29 @@ jobs:
       - name: Run IPA analysis
         id: analysis
         run: |
+          # Verify file exists before analysis
+          if [ ! -f "./tmp/uploaded/ipa_file.ipa" ]; then
+            echo "Error: IPA file not found for analysis"
+            exit 1
+          fi
+          
           # Run ipachecker on uploaded IPA file
           echo "Analyzing IPA file with ipachecker"
-          ipachecker "./tmp/uploaded/ipa_file.ipa" --json --output analysis_results.json --quiet
+          echo "File size: $(stat -c%s ./tmp/uploaded/ipa_file.ipa) bytes"
+          
+          # Run with more verbose output for debugging
+          ipachecker "./tmp/uploaded/ipa_file.ipa" --json --output analysis_results.json
           
           # Check if analysis was successful
           if [ ! -f "analysis_results.json" ]; then
             echo "Error: Analysis failed to create results file"
+            exit 1
+          fi
+          
+          # Verify the JSON file is valid
+          if ! python -c "import json; json.load(open('analysis_results.json'))"; then
+            echo "Error: Analysis results file is not valid JSON"
+            cat analysis_results.json
             exit 1
           fi
           
@@ -84,18 +143,33 @@ jobs:
           fi
           
           # Check if analysis was successful
-          if [ -f "analysis_results.json" ]; then
-            # Read the analysis results
-            RESULTS=$(cat analysis_results.json)
-            
-            # Create the update payload
-            cat > update_payload.json << EOF
+          if [ -f "analysis_results.json" ] && [ -s "analysis_results.json" ]; then
+            # Read the analysis results and validate JSON
+            if python -c "import json; json.load(open('analysis_results.json'))" 2>/dev/null; then
+              RESULTS=$(cat analysis_results.json)
+              
+              # Store GitHub run ID for download links
+              GITHUB_RUN_ID="${{ github.run_id }}"
+              
+              # Create the update payload with run ID
+              cat > update_payload.json << EOF
           {
             "status": "completed",
             "success": true,
-            "results": $RESULTS
+            "results": $RESULTS,
+            "githubRunId": "$GITHUB_RUN_ID"
           }
           EOF
+            else
+              echo "Error: Analysis results file contains invalid JSON"
+              cat > update_payload.json << EOF
+          {
+            "status": "failed",
+            "success": false,
+            "error": "Analysis produced invalid results. Check GitHub Actions logs for details."
+          }
+          EOF
+            fi
           else
             # Create an error payload
             cat > update_payload.json << EOF
@@ -107,12 +181,34 @@ jobs:
           EOF
           fi
           
+          echo "Sending update payload:"
+          cat update_payload.json
+          
           # Send the results back to the CDN
-          curl -X POST "https://api.ipachecker.qzz.io/update/${{ github.event.client_payload.file_id }}" \
-            -H "Content-Type: application/json" \
-            -H "X-Upload-ID: ${{ github.event.client_payload.upload_id }}" \
-            -H "X-API-Key: $API_SECRET_KEY" \
-            -d @update_payload.json
+          for i in 1 2 3; do
+            HTTP_CODE=$(curl -X POST "https://api.ipachecker.qzz.io/update/${{ github.event.client_payload.file_id }}" \
+              -H "Content-Type: application/json" \
+              -H "X-Upload-ID: ${{ github.event.client_payload.upload_id }}" \
+              -H "X-API-Key: $API_SECRET_KEY" \
+              -w "%{http_code}" \
+              -d @update_payload.json \
+              --max-time 30)
+            
+            echo "Update API HTTP response code: $HTTP_CODE"
+            
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "Results sent successfully!"
+              break
+            else
+              echo "Attempt $i failed with HTTP code: $HTTP_CODE"
+              if [ "$i" -lt 3 ]; then
+                echo "Retrying in 5 seconds..."
+                sleep 5
+              else
+                echo "Failed to send results after 3 attempts"
+              fi
+            fi
+          done
 
       - name: Upload analysis results as an artifact
         if: always()
