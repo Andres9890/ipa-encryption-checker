@@ -35,92 +35,152 @@
             <p>We use your data solely to provide and improve the Service. By using the Service, you agree to the collection and use of information in accordance with this policy.</p>
             
             <h2 id="information-collected">2. Information We Collect</h2>
-            <p>When you use our Service, we collect information from the IPA files you voluntarily upload for analysis. We also collect your IP address when you upload files, solely for the purposes of rate limiting, abuse prevention, and security. This information is not used for tracking or analytics and is not retained longer than necessary for these purposes.</p>
+            <p>We collect only the minimal information necessary to provide our Service:</p>
+            <ul>
+                <li><strong>IPA Files:</strong> Files you voluntarily upload for analysis</li>
+                <li><strong>IP Address:</strong> Your device's internet address, used solely for rate limiting (30 requests per minute, 12 uploads per hour), abuse prevention, and security</li>
+                <li><strong>File Metadata:</strong> Information extracted from uploaded IPA files during analysis (app name, version, etc.)</li>
+                <li><strong>Verification Data:</strong> CAPTCHA responses to prevent automated abuse</li>
+            </ul>
+            <p>We do not collect names, email addresses, or any other personally identifiable information unless you explicitly provide it when contacting us.</p>
             
-            <h2 id="uploaded-files">3. Uploaded Files</h2>
+            <h2 id="uploaded-files">3. Uploaded Files and Analysis</h2>
             <p>Our primary function is to analyze IPA files that you upload to our Service. When you upload an IPA file:</p>
             <ul>
-                <li>The file is temporarily stored on cloudflare servers for analysis purposes only</li>
-                <li>We extract metadata from the file (such as app name, bundle identifier, version, etc.)</li>
-                <li>We analyze the file's encryption status</li>
-                <li>We generate an MD5 hash of the file</li>
-                <li>All files are automatically deleted after analysis is complete or within 24 hours, whichever comes first</li>
+                <li>The file is temporarily stored on Cloudflare R2 servers for analysis purposes</li>
+                <li>We automatically extract metadata from the file (app name, bundle identifier, version, minimum iOS version, architecture)</li>
+                <li>We analyze the file's encryption status using automated tools</li>
+                <li>We generate an MD5 hash of the file for verification purposes</li>
+                <li>Files are processed through GitHub Actions for automated analysis</li>
             </ul>
             
-            <h2 id="usage-data">4. Usage Data</h2>
-            <p>We do not collect any usage data or technical information when you visit our website, except for the IP address used during file uploads. The IP address is used exclusively for rate limiting, abuse prevention, and security, and is not used for tracking, analytics, or profiling. We do not track:</p>
+            <h2 id="captcha-verification">4. CAPTCHA and Anti-Abuse Measures</h2>
+            <p>To prevent automated abuse, we use Cloudflare Turnstile CAPTCHA verification. When you complete a CAPTCHA challenge:</p>
             <ul>
-                <li>Browser information</li>
-                <li>Pages visited</li>
-                <li>Visit timestamps</li>
-                <li>Session duration</li>
+                <li>Your response is verified with Cloudflare's servers</li>
+                <li>Cloudflare may process your IP address and browser information according to their privacy policy</li>
+                <li>We do not store or access the verification data beyond confirming it's valid</li>
             </ul>
-            <p>Our focus is solely on providing the IPA analysis service without collecting any information about your browsing behavior or identity, except as required for security and abuse prevention.</p>
             
-            <h2 id="cookies">5. Cookies and Tracking Technologies</h2>
-            <p>We do not use cookies or similar tracking technologies to track the activity on our Service.</p>
-            
-            <h2 id="use-of-data">6. Use of Data</h2>
-            <p>We use the collected data for the following purposes:</p>
+            <h2 id="automated-processing">5. Automated Processing</h2>
+            <p>Our Service uses automated systems to analyze your uploaded files. This includes:</p>
             <ul>
-                <li>To provide and maintain our Service</li>
-                <li>To analyze IPA files that you upload</li>
-                <li>To detect, prevent, and address technical issues</li>
-                <li>To monitor the usage of our Service</li>
-                <li>To improve the functionality and user experience of our Service</li>
-                <li>To prevent abuse and ensure fair use of the Service (using IP-based rate limiting)</li>
+                <li>Automated file format validation</li>
+                <li>Encryption status detection algorithms</li>
+                <li>Metadata extraction scripts</li>
+                <li>File hash generation</li>
             </ul>
+            <p>No human manually reviews your uploaded files unless specifically required for technical support purposes.</p>
             
-            <h2 id="data-retention">7. Data Retention</h2>
-            <p>We retain your uploaded files only for the time necessary to perform the requested analysis, and in no case longer than 24 hours. After this period, all uploaded files are automatically and permanently deleted from our servers.</p>
-            <p>IP addresses collected for rate limiting and security are retained only as long as necessary to enforce these protections and are automatically deleted thereafter. Since we do not collect any other usage data, there is no additional information retained beyond the temporary storage of your uploaded IPA files and IP address for security purposes.</p>
-            
-            <h2 id="data-transfer">8. Data Transfer</h2>
-            <p>Your information, including uploaded IPA files, may be transferred to — and maintained on — computers located outside of your state, province, country, or other governmental jurisdiction where the data protection laws may differ from those of your jurisdiction.</p>
-            <p>Your consent to this Privacy Policy followed by your submission of such information represents your agreement to that transfer.</p>
-            
-            <h2 id="data-security">9. Security</h2>
-            <p>The security of your data is important to us, but remember that no method of transmission over the Internet or method of electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your personal data, we cannot guarantee its absolute security.</p>
-            <p>Our specific security measures include:</p>
+            <h2 id="cookies">6. Cookies and Local Storage</h2>
+            <p>We use minimal local storage for:</p>
             <ul>
-                <li>Secure file transfer protocols for uploaded files</li>
-                <li>Automatic deletion of uploaded files after analysis</li>
-                <li>Limited access to servers processing your data</li>
-                <li>Regular security monitoring</li>
+                <li>Dark mode preference (stored locally in your browser)</li>
+                <li>No tracking cookies or analytics cookies are used</li>
+                <li>We do not track your browsing behavior across our site</li>
             </ul>
             
-            <h2 id="third-party-services">10. Service Providers</h2>
-            <p>We may employ third-party companies and individuals to facilitate our Service ("Service Providers"), provide the Service on our behalf, or perform Service-related services.</p>
-            <p>These third parties may have access to your uploaded files only to perform these tasks on our behalf and are obligated not to disclose or use it for any other purpose. Our service providers include:</p>
+            <h2 id="use-of-data">7. Use of Data</h2>
+            <p>We use the collected data exclusively for:</p>
             <ul>
-                <li>GitHub Pages for web hosting</li>
-                <li>Cloudflare R2 for temporary file storage</li>
+                <li>Providing the IPA analysis service</li>
+                <li>Preventing abuse and ensuring fair use through rate limiting</li>
+                <li>Maintaining service security and stability</li>
+                <li>Improving the accuracy and performance of our analysis tools</li>
             </ul>
+            <p>We do not use your data for marketing, advertising, profiling, or any commercial purposes beyond providing the Service.</p>
             
-            <h2 id="analytics">11. Analytics</h2>
-            <p>We do not use any analytics tools or third-party tracking services. We do not monitor or analyze how users interact with our Service, maintaining complete privacy for all visitors.</p>
-            
-            <h2 id="childrens-privacy">12. Children's Privacy</h2>
-            <p>Our Service does not address anyone under the age of 13. We do not knowingly collect personally identifiable information from anyone under the age of 13. If you are a parent or guardian and you are aware that your child has provided us with personal data, please contact us.</p>
-            
-            <h2 id="changes-to-policy">13. Changes to This Privacy Policy</h2>
-            <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "effective date" at the bottom of this page.</p>
-            <p>You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.</p>
-            
-            <h2 id="your-rights">14. Your Rights</h2>
-            <p>Depending on your location, you may have certain rights regarding your personal information, including:</p>
+            <h2 id="data-retention">8. Data Retention</h2>
+            <p>We have different retention periods for different types of data:</p>
             <ul>
-                <li>The right to access the personal information we have about you</li>
-                <li>The right to request correction or deletion of your personal information</li>
-                <li>The right to restrict or object to our processing of your personal information</li>
-                <li>The right to data portability</li>
+                <li><strong>Uploaded IPA Files:</strong> Stored temporarily on our servers for up to 1 hour for immediate analysis, then automatically deleted</li>
+                <li><strong>Analysis Results & Download Files:</strong> Stored via GitHub Actions artifacts for up to 90 days to enable download functionality</li>
+                <li><strong>IP Address Data:</strong> Retained only as long as necessary for rate limiting and security (typically 1 hour), then automatically deleted</li>
+                <li><strong>Session Data:</strong> Temporary session information is retained for up to 1 hour to coordinate the analysis process</li>
             </ul>
-            <p>Since we do not collect or retain any personal information or usage data, these rights are not applicable in practice. The only data we temporarily process are the IPA files you voluntarily upload, which are automatically deleted after analysis.</p>
+            <p>After these retention periods, all data is automatically and permanently deleted from our systems.</p>
             
-            <h2 id="contact">15. Contact Us</h2>
-            <p>If you have any questions about this Privacy Policy, please contact us through our <a href="https://github.com/Andres9890/ipa-encryption-checker" style="color: var(--primary-color); font-weight: 600;">GitHub repository</a> or through our <a href="mailto:andres@ipachecker.com" style="color: var(--primary-color); font-weight: 600;">Email</a>.</p>
+            <h2 id="download-links">9. Download Functionality</h2>
+            <p>To provide download links for your processed files:</p>
+            <ul>
+                <li>Processed files and analysis results are stored as GitHub Actions artifacts</li>
+                <li>Download links are provided through GitHub's artifact system</li>
+                <li>These files remain available for download for 90 days</li>
+                <li>Access to download links requires the original upload session ID for security</li>
+            </ul>
             
-            <div class="effective-date">Effective Date: June 17, 2025</div>
+            <h2 id="data-transfer">10. Data Transfer</h2>
+            <p>Your information may be transferred to and processed in:</p>
+            <ul>
+                <li>United States/Europe (Cloudflare R2, GitHub Actions)</li>
+                <li>Other locations where our service providers operate</li>
+            </ul>
+            <p>All transfers are conducted with appropriate security measures. By using our Service, you consent to these transfers.</p>
+            
+            <h2 id="data-security">11. Security</h2>
+            <p>We implement comprehensive security measures to protect your data:</p>
+            <ul>
+                <li>Encrypted file transfer (HTTPS/TLS) for all communications</li>
+                <li>Automatic file deletion after processing</li>
+                <li>Access controls limiting who can access processing systems</li>
+                <li>Regular security monitoring and updates</li>
+                <li>Rate limiting and abuse prevention systems</li>
+                <li>File format validation to prevent malicious uploads</li>
+            </ul>
+            <p>While we strive to protect your data, no method of internet transmission is 100% secure. We cannot guarantee absolute security.</p>
+            
+            <h2 id="third-party-services">12. Third-Party Service Providers</h2>
+            <p>We work with the following third-party services that may process your data:</p>
+            <ul>
+                <li><strong>GitHub Pages:</strong> Web hosting for our website</li>
+                <li><strong>GitHub Actions:</strong> Automated processing and analysis of uploaded files</li>
+                <li><strong>Cloudflare R2:</strong> Temporary file storage during analysis</li>
+                <li><strong>Cloudflare Turnstile:</strong> CAPTCHA verification to prevent abuse</li>
+            </ul>
+            <p>These providers process data according to their own privacy policies and are bound by contractual obligations to protect your information.</p>
+            
+            <h2 id="analytics">13. Analytics and Tracking</h2>
+            <p>We do not use:</p>
+            <ul>
+                <li>Google Analytics or similar tracking services</li>
+                <li>Social media tracking pixels</li>
+                <li>Advertising networks or marketing cookies</li>
+                <li>Cross-site tracking technologies</li>
+            </ul>
+            <p>We maintain complete privacy for all visitors and do not monitor your browsing behavior.</p>
+            
+            <h2 id="childrens-privacy">14. Children's Privacy</h2>
+            <p>Our Service is not directed to children under 13 years of age. We do not knowingly collect personal information from children under 13. If we discover that a child under 13 has provided us with personal information, we will delete such information immediately.</p>
+            
+            <h2 id="your-rights">15. Your Privacy Rights</h2>
+            <p>Depending on your location, you may have rights regarding your personal information:</p>
+            <ul>
+                <li><strong>Access:</strong> Request information about data we have about you</li>
+                <li><strong>Correction:</strong> Request correction of inaccurate data</li>
+                <li><strong>Deletion:</strong> Request deletion of your personal data</li>
+                <li><strong>Portability:</strong> Request a copy of your data in a structured format</li>
+                <li><strong>Objection:</strong> Object to processing of your personal data</li>
+            </ul>
+            <p>Since we collect minimal data and automatically delete files after processing, most data is automatically removed without action needed. For any privacy concerns or to exercise your rights, contact us using the information below.</p>
+            
+            <h2 id="changes-to-policy">16. Changes to This Privacy Policy</h2>
+            <p>We may update this Privacy Policy to reflect changes in our practices or legal requirements. When we make material changes:</p>
+            <ul>
+                <li>We will post the updated policy on this page</li>
+                <li>We will update the "Last Updated" date at the bottom</li>
+                <li>For significant changes, we may provide additional notice on our website</li>
+            </ul>
+            <p>We encourage you to review this policy periodically for any updates.</p>
+            
+            <h2 id="contact">17. Contact Us</h2>
+            <p>If you have questions about this Privacy Policy or want to exercise your privacy rights, please contact us:</p>
+            <ul>
+                <li><strong>Email:</strong> <a href="mailto:andres@ipachecker.qzz.io" style="color: var(--primary-color); font-weight: 600;">andres@ipachecker.qzz.io</a></li>
+                <li><strong>GitHub:</strong> <a href="https://github.com/Andres9890/ipa-encryption-checker" style="color: var(--primary-color); font-weight: 600;">Open an issue on our repository</a></li>
+            </ul>
+            <p>We aim to respond to privacy-related inquiries within 30 days.</p>
+            
+            <div class="effective-date">Last Updated: September 24, 2025</div>
             
             <div class="return-link">
                 <a href="https://ipachecker.qzz.io" class="btn"><i class="fas fa-arrow-left"></i> Return to Home</a>
