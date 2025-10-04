@@ -156,6 +156,18 @@
             color: white;
         }
         
+        .feature-badge {
+            display: inline-block;
+            background-color: #10b981;
+            color: white;
+            padding: 0.15rem 0.4rem;
+            border-radius: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+        
         body.dark-mode .code-header {
             background-color: #1e293b;
             border-color: var(--dark-border-color);
@@ -281,8 +293,11 @@ ipachecker /path/app.ipa
 # Download and analyze from URL
 ipachecker https://example.com/app.ipa
 
-# Analyze multiple files
-ipachecker app1.ipa app2.ipa https://example.com/app3.ipa
+# Analyze and rename to obscura format
+ipachecker app.ipa --rename
+
+# Analyze multiple files and rename them
+ipachecker app1.ipa app2.ipa app3.ipa --rename
 
 # Export results to JSON
 ipachecker app.ipa --json --output results.json
@@ -290,8 +305,14 @@ ipachecker app.ipa --json --output results.json
 # Batch analyze all IPAs in a folder
 ipachecker --batch-analysis /path/to/folder
 
+# Batch analyze and rename all files
+ipachecker --batch-analysis /path/to/folder --rename
+
 # Batch analyze from URL/path list file
-ipachecker --batch-analysis list.txt</code></pre>
+ipachecker --batch-analysis list.txt
+
+# Download, keep, and rename the file
+ipachecker https://example.com/app.ipa --dont-delete --rename</code></pre>
             </div>
 
             <h3>Command Line Options</h3>
@@ -302,6 +323,7 @@ ipachecker --batch-analysis list.txt</code></pre>
                 <li><code>-q, --quiet</code> - Only print errors and results</li>
                 <li><code>-d, --debug</code> - Print all logs for troubleshooting</li>
                 <li><code>--dont-delete</code> - Don't delete downloaded files after analysis</li>
+                <li><code>--rename</code> - Rename IPA files to obscura filename format after analysis <span class="feature-badge">NEW</span></li>
                 <li><code>--batch-analysis</code> - Enable batch analysis mode for multiple files</li>
             </ul>
 
@@ -312,10 +334,41 @@ ipachecker --batch-analysis list.txt</code></pre>
                 <li><strong>Architecture Analysis</strong> - Identifies app architecture (32-bit, 64-bit, Universal)</li>
                 <li><strong>Batch Processing</strong> - Analyze multiple IPA files from folders or lists</li>
                 <li><strong>Remote Downloads</strong> - Download and analyze IPA files directly from URLs</li>
+                <li><strong>File Renaming</strong> - Automatically rename IPA files to standardized obscura format <span class="feature-badge">NEW</span></li>
                 <li><strong>JSON Export</strong> - Export analysis results to JSON format</li>
                 <li><strong>Obscura Filename</strong> - Creates standardized filenames in iOSObscura format</li>
                 <li><strong>MD5 Hash</strong> - Generates file hash for verification</li>
             </ul>
+
+            <h3>File Renaming Feature <span class="feature-badge">NEW</span></h3>
+            <p>The <code>--rename</code> flag automatically renames analyzed IPA files to the standardized Obscura filename format:</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Rename Examples</span>
+                    <div class="button-group">
+                        <button class="copy-btn" onclick="copyRenameCode()">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                        <span class="copy-success" id="renameCopySuccess">Copied!</span>
+                    </div>
+                </div>
+                <pre><code id="renameCode"># Rename format:
+# {DisplayName}-({BundleID})-{AppVersion}-(iOS_{MinVersion})-{MD5Hash}.ipa
+
+# Example: Rename a single file
+ipachecker MyApp.ipa --rename
+# Result: MyApp-(com.company.myapp)-1.2.3-(iOS_13.0)-abc123...ipa
+
+# Batch rename all IPAs in a folder
+ipachecker --batch-analysis /path/to/ipas --rename
+
+# The rename feature:
+# Only renames local files (not downloads unless --dont-delete used)
+# Skips files already in obscura format
+# Won't overwrite existing files
+# Handles permission errors gracefully
+# Works with both single and batch analysis</code></pre>
+            </div>
 
             <h3>Example Output</h3>
             <div class="code-container">
@@ -433,6 +486,10 @@ Example-(com.example.app)-1.0-(iOS_2.0)-d41d8cd98f00b204e9800998ecf8427e.ipa</co
         
         function copyJsonCode() {
             copyCode('jsonCode', 'jsonCopySuccess');
+        }
+        
+        function copyRenameCode() {
+            copyCode('renameCode', 'renameCopySuccess');
         }
     </script>
 </body>
