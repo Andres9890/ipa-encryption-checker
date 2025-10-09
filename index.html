@@ -45,6 +45,13 @@
                 <p>or</p>
                 <button class="btn" id="selectFileBtn">Select Files</button>
                 <input type="file" id="fileInput" accept=".ipa" multiple />
+                <div class="url-input-container" id="urlInputContainer" style="display: none;">
+                    <input type="text" id="urlInput" placeholder="https://example.com/app.ipa" />
+                    <button class="btn" id="submitUrlBtn">Analyze IPA</button>
+                </div>
+                <div class="mode-toggle-icon" id="modeToggleIcon" title="URL mode">
+                    <i class="fas fa-link"></i>
+                </div>
             </div>
             <div id="cf-turnstile-wrapper" style="display:none; margin-top: 1.5rem; text-align:center;"></div>
             

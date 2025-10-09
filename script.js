@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     initDarkMode();
-    
+
     const dropArea = document.getElementById('dropArea');
     const fileInput = document.getElementById('fileInput');
     const selectFileBtn = document.getElementById('selectFileBtn');
@@ -9,25 +9,80 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorMessage = document.getElementById('errorMessage');
     const filesContainer = document.getElementById('filesContainer');
     const resultsContainerTemplate = document.getElementById('resultsContainerTemplate');
+    const modeToggleIcon = document.getElementById('modeToggleIcon');
+    const urlInputContainer = document.getElementById('urlInputContainer');
+    const urlInput = document.getElementById('urlInput');
+    const submitUrlBtn = document.getElementById('submitUrlBtn');
 
     let CLOUDFLARE_WORKER_URL = window.config?.CLOUDFLARE_WORKER_URL || 'https://api.ipachecker.qzz.io';
-    CLOUDFLARE_WORKER_URL = CLOUDFLARE_WORKER_URL.endsWith('/') 
-        ? CLOUDFLARE_WORKER_URL.slice(0, -1) 
+    CLOUDFLARE_WORKER_URL = CLOUDFLARE_WORKER_URL.endsWith('/')
+        ? CLOUDFLARE_WORKER_URL.slice(0, -1)
         : CLOUDFLARE_WORKER_URL;
-    
+
     const MAX_FILES = 5;
     const activeUploads = new Map();
     let userIP = null;
+    let isUrlMode = false;
     
     console.log('IPA Encryption Checker initialized');
     console.log('Using Worker URL:', CLOUDFLARE_WORKER_URL);
     
     testWorkerConnection();
-    
+
+    modeToggleIcon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        isUrlMode = !isUrlMode;
+
+        if (isUrlMode) {
+            dropArea.classList.add('url-mode');
+            urlInputContainer.style.display = 'flex';
+            modeToggleIcon.title = 'File upload mode';
+            modeToggleIcon.querySelector('i').className = 'fas fa-cloud-upload-alt';
+        } else {
+            dropArea.classList.remove('url-mode');
+            urlInputContainer.style.display = 'none';
+            modeToggleIcon.title = 'URL mode';
+            modeToggleIcon.querySelector('i').className = 'fas fa-link';
+            urlInput.value = '';
+        }
+    });
+
+    submitUrlBtn.addEventListener('click', () => {
+        const url = urlInput.value.trim();
+
+        if (!url) {
+            showError('Please enter a URL');
+            return;
+        }
+
+        if (!url.toLowerCase().endsWith('.ipa')) {
+            showError('URL must end with .ipa');
+            return;
+        }
+
+        try {
+            new URL(url);
+        } catch (e) {
+            showError('Please enter a valid URL');
+            return;
+        }
+
+        turnstileToken = null;
+        pendingUrl = url;
+        showCaptcha();
+    });
+
+    urlInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            submitUrlBtn.click();
+        }
+    });
+
     let turnstileWidgetId = null;
     let turnstileToken = null;
     const turnstileWrapper = document.getElementById('cf-turnstile-wrapper');
     let pendingFileList = null;
+    let pendingUrl = null;
     function showCaptcha() {
         if (turnstileWrapper.style.display !== 'block') {
             turnstileWrapper.style.display = 'block';
@@ -56,6 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (pendingFileList) {
                         handleFiles(pendingFileList, true);
                         pendingFileList = null;
+                    } else if (pendingUrl) {
+                        handleUrl(pendingUrl, true);
+                        pendingUrl = null;
                     }
                 }, 200);
             },
@@ -123,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     dropArea.addEventListener('click', (e) => {
-        if (e.target !== selectFileBtn && !selectFileBtn.contains(e.target)) {
+        if (!isUrlMode && e.target !== selectFileBtn && !selectFileBtn.contains(e.target)) {
             fileInput.click();
         }
     });
@@ -167,6 +225,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
+    function handleUrl(url, skipCaptchaCheck) {
+        if (!turnstileToken && !skipCaptchaCheck) {
+            pendingUrl = url;
+            showCaptcha();
+            return;
+        }
+
+        resetUI();
+        processUrl(url, turnstileToken);
+    }
+
+    function processUrl(url, turnstileToken) {
+        console.log(`Processing URL: ${url}`);
+        const fileId = generateUploadId();
+        const fileName = url.split('/').pop() || 'ipa-from-url.ipa';
+        const dummyFile = { name: fileName };
+        const resultContainer = createResultContainer(dummyFile, fileId);
+        activeUploads.set(fileId, {
+            url: url,
+            status: 'uploading',
+            container: resultContainer
+        });
+        uploadUrl(url, fileId, resultContainer, turnstileToken);
+    }
+
     function processFile(file, turnstileToken) {
         console.log(`Processing file: ${file.name}, size: ${file.size} bytes`);
         const fileId = generateUploadId();
@@ -212,11 +295,11 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => {
             return response.text().then(text => {
                 console.log(`Upload response for ${fileId}:`, text);
-                
+
                 if (!response.ok) {
                     throw new Error(`Network error: ${response.status} ${text}`);
                 }
-                
+
                 try {
                     return JSON.parse(text);
                 } catch (e) {
@@ -227,25 +310,88 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             console.log(`Upload successful for ${fileId}, response data:`, data);
-            
+
             if (data.ip) {
                 userIP = data.ip;
                 console.log('User IP from upload response:', userIP);
             }
-            
+
             loadingElement.querySelector('p').textContent = `Analyzing ${file.name}...`;
-            
+
             const fileData = activeUploads.get(fileId);
             fileData.status = 'analyzing';
             fileData.cloudFileId = data.fileId;
             fileData.uploadId = uploadId;
             activeUploads.set(fileId, fileData);
-            
+
             pollAnalysisStatus(fileId);
         })
         .catch(error => {
             console.error(`Upload error for ${fileId}:`, error);
             showFileError(resultContainer, `Error uploading file: ${error.message}`);
+        });
+    }
+
+    function uploadUrl(url, fileId, resultContainer, turnstileToken) {
+        const uploadId = generateUploadId();
+        console.log(`Generated upload ID: ${uploadId} for URL ${fileId}`);
+        const loadingElement = resultContainer.querySelector('.results-loading');
+        const fileName = url.split('/').pop();
+        loadingElement.querySelector('p').textContent = `Processing URL...`;
+
+        const requestBody = {
+            url: url
+        };
+
+        if (turnstileToken) {
+            requestBody.turnstileToken = turnstileToken;
+        }
+
+        fetch(`${CLOUDFLARE_WORKER_URL}/upload`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Upload-ID': uploadId
+            },
+            body: JSON.stringify(requestBody)
+        })
+        .then(response => {
+            return response.text().then(text => {
+                console.log(`Upload response for ${fileId}:`, text);
+
+                if (!response.ok) {
+                    throw new Error(`Network error: ${response.status} ${text}`);
+                }
+
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('JSON parse error:', e);
+                    throw new Error(`Invalid JSON response: ${text}`);
+                }
+            });
+        })
+        .then(data => {
+            console.log(`URL processing successful for ${fileId}, response data:`, data);
+
+            if (data.ip) {
+                userIP = data.ip;
+                console.log('User IP from upload response:', userIP);
+            }
+
+            loadingElement.querySelector('p').textContent = `Analyzing ${fileName}...`;
+
+            const urlData = activeUploads.get(fileId);
+            urlData.status = 'analyzing';
+            urlData.cloudFileId = data.fileId;
+            urlData.uploadId = uploadId;
+            activeUploads.set(fileId, urlData);
+
+            pollAnalysisStatus(fileId);
+        })
+        .catch(error => {
+            console.error(`URL upload error for ${fileId}:`, error);
+            showFileError(resultContainer, `Error processing URL: ${error.message}`);
         });
     }
     
