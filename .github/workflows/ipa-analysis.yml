@@ -34,7 +34,7 @@ jobs:
       - name: Create temp directory
         run: mkdir -p ./tmp/uploaded
           
-      - name: Download IPA file from Cloudflare R2
+      - name: Download IPA file from Cloudflare R2 or URL
         env:
           API_SECRET_KEY: ${{ secrets.API_SECRET_KEY }}
         run: |
