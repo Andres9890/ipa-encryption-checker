@@ -39,6 +39,7 @@
             <p><strong>"IPA"</strong> refers to iOS Application Package files (.ipa extension).</p>
             <p><strong>"You"</strong> refers to the individual accessing or using the Service, or the company or other legal entity on behalf of which such individual is accessing or using the Service.</p>
             <p><strong>"We," "Us," "Our"</strong> refers to the operators of IPA Encryption Checker.</p>
+            <p><strong>"Upload ID"</strong> refers to the unique session identifier generated for each file upload or URL submission.</p>
             
             <h2 id="service-description">3. Service Description</h2>
             <p>IPA Encryption Checker is a free online tool that allows users to analyze iOS IPA files. The Service provides:</p>
@@ -46,70 +47,128 @@
                 <li>Encryption status detection for IPA files</li>
                 <li>Extraction and display of app metadata (name, version, bundle ID, etc.)</li>
                 <li>Architecture information (32-bit, 64-bit, Universal)</li>
-                <li>File hash generation for verification</li>
-                <li>Download links for processed files (available for 90 days)</li>
+                <li>File hash generation for verification (MD5, performed in backend analysis)</li>
+                <li>Download links for processed files (available for 90 days via GitHub Actions artifacts)</li>
+                <li>Two submission methods:
+                    <ul>
+                        <li><strong>Direct File Upload:</strong> Upload IPA files from your device</li>
+                        <li><strong>URL Mode:</strong> Provide a direct URL to an IPA file hosted elsewhere</li>
+                    </ul>
+                </li>
             </ul>
             
-            <h2 id="user-content">4. User Content and File Uploads</h2>
-            <p>Our Service allows you to upload IPA files for analysis. You retain all ownership rights to your uploaded files. We do not claim ownership over any content that you upload.</p>
-            <p>By uploading IPA files to the Service, you agree and represent that:</p>
+            <h2 id="user-content">4. User Content and File Submissions</h2>
+            <p>Our Service allows you to submit IPA files for analysis via upload or URL. You retain all ownership rights to your uploaded files. We do not claim ownership over any content that you submit.</p>
+            <p>By submitting IPA files to the Service (via upload or URL), you agree and represent that:</p>
             <ul>
                 <li>You have the legal right to upload and analyze the IPA files</li>
+                <li>For URL submissions, you have the legal right to access and analyze files at the provided URL</li>
                 <li>The files do not violate any applicable laws, regulations, or third-party rights</li>
                 <li>The files do not contain malicious code, viruses, or harmful content</li>
                 <li>You will not upload copyrighted material without proper authorization</li>
                 <li>You acknowledge that uploaded files are temporarily stored for analysis and download purposes</li>
+                <li>You will not submit URLs to files you don't have permission to access</li>
+                <li>For file uploads, files undergo security validation including magic bytes verification to ensure they are valid IPA/ZIP files</li>
+                <li>For URL submissions, URLs must end with .ipa and be properly formatted</li>
             </ul>
             
             <h2 id="usage-requirements">5. Usage Requirements and Verification</h2>
             <p>To use our Service, you must:</p>
             <ul>
-                <li>Complete CAPTCHA verification to prevent automated abuse</li>
-                <li>Comply with our rate limits (30 requests per minute, 12 uploads per hour)</li>
-                <li>Only upload valid IPA files for analysis</li>
+                <li>Complete CAPTCHA verification (Cloudflare Turnstile) to prevent automated abuse</li>
+                <li>Comply with our rate limits:
+                    <ul>
+                        <li>30 requests per minute per IP address</li>
+                        <li>12 uploads per hour per IP address</li>
+                    </ul>
+                </li>
+                <li>Only upload valid IPA files for analysis (file uploads) or provide valid URLs to IPA files (URL mode)</li>
                 <li>Respect the technical limitations of our Service</li>
+                <li>Use the Upload ID provided with your submission for accessing file status and results</li>
+                <li>Not attempt to access files or results without proper authentication</li>
             </ul>
             
-            <h2 id="data-privacy">6. Data Privacy and Retention</h2>
+            <h2 id="authentication">6. Authentication and Session Management</h2>
+            <p>When you submit a file or URL for analysis:</p>
+            <ul>
+                <li>A unique Upload ID is generated to authenticate your access</li>
+                <li>This Upload ID is required for all operations related to your submission (status checks, file access, updates)</li>
+                <li>Upload IDs are valid for the duration of your session (up to 1 hour)</li>
+                <li>You are responsible for maintaining the confidentiality of your Upload ID</li>
+                <li>Do not share your Upload ID with others</li>
+                <li>After the session expires, files can only be accessed through GitHub artifact download links</li>
+            </ul>
+            
+            <h2 id="data-privacy">7. Data Privacy and Retention</h2>
             <p>We collect minimal information necessary to provide the Service:</p>
             <ul>
-                <li>IP addresses for rate limiting, abuse prevention, and security (retained for up to 1 hour)</li>
+                <li>IP addresses for rate limiting, abuse prevention, and security (1-minute window for requests, 1-hour window for uploads)</li>
                 <li>Uploaded files for analysis (retained for up to 1 hour on our servers)</li>
-                <li>Analysis results and processed files (available for download for 90 days via GitHub)</li>
+                <li>URL information for URL submissions (retained for up to 1 hour)</li>
+                <li>Analysis results and processed files (available for download for 90 days via GitHub Actions artifacts)</li>
+                <li>Session data including Upload IDs (retained for up to 1 hour)</li>
             </ul>
             <p>For detailed information about how we handle your data, please review our <a href="./privacy" style="color: var(--primary-color); font-weight: 600;">Privacy Policy</a>.</p>
             
-            <h2 id="limitations">7. Service Limitations</h2>
+            <h2 id="limitations">8. Service Limitations</h2>
             <p>The Service has the following technical limitations:</p>
             <ul>
-                <li><strong>File Size:</strong> Maximum 100MB per file</li>
-                <li><strong>File Count:</strong> Maximum 5 files per upload session</li>
-                <li><strong>File Type:</strong> Only .ipa files are accepted</li>
-                <li><strong>Rate Limits:</strong> 30 requests per minute, 12 uploads per hour per IP address</li>
+                <li><strong>File Upload Mode:</strong>
+                    <ul>
+                        <li>Maximum 100MB per file</li>
+                        <li>Maximum 5 files per upload session</li>
+                        <li>Only .ipa files are accepted</li>
+                        <li>Files must have valid ZIP/IPA signatures (magic bytes verification)</li>
+                    </ul>
+                </li>
+                <li><strong>URL Mode:</strong>
+                    <ul>
+                        <li>No file size limit</li>
+                        <li>URLs must end with .ipa</li>
+                        <li>URLs must be properly formatted and accessible</li>
+                        <li>URL must point to a valid IPA file</li>
+                    </ul>
+                </li>
+                <li><strong>Rate Limits (applies to both modes):</strong>
+                    <ul>
+                        <li>30 requests per minute per IP address</li>
+                        <li>12 uploads/URL submissions per hour per IP address</li>
+                    </ul>
+                </li>
+                <li><strong>Timeouts:</strong>
+                    <ul>
+                        <li>3 minutes for file upload requests</li>
+                        <li>30 seconds for other requests</li>
+                    </ul>
+                </li>
                 <li><strong>Availability:</strong> Service may be temporarily unavailable for maintenance or updates</li>
             </ul>
             
-            <h2 id="download-terms">8. Download and Storage Terms</h2>
+            <h2 id="download-terms">9. Download and Storage Terms</h2>
             <p>Regarding file downloads and storage:</p>
             <ul>
                 <li>Processed files and analysis results are available for download for 90 days</li>
-                <li>Download links are provided through GitHub's artifact system</li>
-                <li>Access to downloads requires your original upload session information</li>
+                <li>Download links are provided through GitHub's artifact system via nightly.link</li>
+                <li>Access to files during the 1-hour session window requires your Upload ID</li>
+                <li>After the session expires, download links remain accessible without authentication</li>
                 <li>We are not responsible for failed downloads or expired links</li>
-                <li>Files are automatically deleted after the 90-day retention period</li>
+                <li>Files are automatically deleted after the 90-day retention period by GitHub's systems</li>
+                <li>Original uploaded files are deleted from our storage after 1 hour</li>
             </ul>
             
-            <h2 id="disclaimer">9. Disclaimer of Warranties</h2>
+            <h2 id="disclaimer">10. Disclaimer of Warranties</h2>
             <p>THE SERVICE IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS WITHOUT ANY WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED. WE SPECIFICALLY DISCLAIM:</p>
             <ul>
                 <li>Any warranties regarding the accuracy, completeness, or reliability of analysis results</li>
                 <li>Any warranties that the Service will be uninterrupted or error-free</li>
                 <li>Any warranties regarding the security or privacy of uploaded files</li>
                 <li>Any warranties that defects will be corrected</li>
+                <li>Any warranties regarding the accessibility of URLs provided in URL mode</li>
+                <li>Any warranties regarding the availability of download links after the 90-day period</li>
             </ul>
             <p>We reserve the right to modify, suspend, or discontinue the Service at any time without notice.</p>
             
-            <h2 id="limitation-of-liability">10. Limitation of Liability</h2>
+            <h2 id="limitation-of-liability">11. Limitation of Liability</h2>
             <p>TO THE MAXIMUM EXTENT PERMITTED BY LAW, WE SHALL NOT BE LIABLE FOR:</p>
             <ul>
                 <li>Any indirect, incidental, special, or consequential damages</li>
@@ -117,63 +176,82 @@
                 <li>Any damages resulting from the use or inability to use the Service</li>
                 <li>Any damages caused by errors in analysis results</li>
                 <li>Any damages resulting from unauthorized access to or disclosure of uploaded files</li>
+                <li>Any damages resulting from failed URL downloads or inaccessible URLs</li>
+                <li>Any damages resulting from expired download links or deleted files</li>
             </ul>
             <p>Our total liability shall not exceed $100 or the amount you paid for the Service (which is free), whichever is less.</p>
             
-            <h2 id="prohibited-uses">11. Prohibited Uses</h2>
+            <h2 id="prohibited-uses">12. Prohibited Uses</h2>
             <p>You agree not to use the Service for:</p>
             <ul>
                 <li>Any unlawful purpose or to violate any laws or regulations</li>
                 <li>Uploading malicious files, viruses, or content that could harm our systems</li>
+                <li>Submitting URLs to malicious content or files you don't have permission to access</li>
                 <li>Attempting to probe, scan, or test the vulnerability of the Service</li>
                 <li>Overloading, flooding, spamming, or attempting to crash the Service</li>
                 <li>Circumventing rate limits or other protective measures</li>
                 <li>Attempting to interfere with the proper functioning of the Service</li>
-                <li>Using automated systems to upload files without human interaction</li>
+                <li>Using automated systems to upload files or submit URLs without completing CAPTCHA verification</li>
                 <li>Reverse engineering or attempting to extract our analysis algorithms</li>
+                <li>Attempting to access files or sessions without proper authentication (Upload ID)</li>
+                <li>Sharing or distributing your Upload ID to unauthorized parties</li>
+                <li>Attempting to bypass file validation or security measures</li>
             </ul>
             
-            <h2 id="termination">12. Termination</h2>
+            <h2 id="termination">13. Termination</h2>
             <p>We may terminate or suspend your access to the Service immediately, without prior notice or liability, for any reason, including:</p>
             <ul>
                 <li>Breach of these Terms</li>
                 <li>Violation of applicable laws</li>
                 <li>Abusive or harmful behavior</li>
+                <li>Circumventing rate limits or security measures</li>
+                <li>Submitting malicious files or URLs</li>
                 <li>Technical or security reasons</li>
             </ul>
             <p>Upon termination, your right to use the Service ceases immediately. Any provisions that should survive termination will remain in effect.</p>
             
-            <h2 id="intellectual-property">13. Intellectual Property</h2>
+            <h2 id="intellectual-property">14. Intellectual Property</h2>
             <p>The Service and its original content, features, and functionality are owned by the Service operators and are protected by copyright, trademark, and other intellectual property laws. You may not:</p>
             <ul>
-                <li>Copy, modify, or distribute our website code or design</li>
-                <li>Use our trademarks or branding without permission</li>
-                <li>Claim ownership of our analysis methods or algorithms</li>
+                <li>Use trademarks or branding without permission</li>
+                <li>Claim ownership of analysis methods or algorithms</li>
+                <li>Reverse engineer our security measures or file validation systems</li>
             </ul>
             
-            <h2 id="changes">14. Changes to Terms</h2>
+            <h2 id="changes">15. Changes to Terms</h2>
             <p>We reserve the right to modify or replace these Terms at any time. If a revision is material, we will:</p>
             <ul>
                 <li>Post the updated Terms on this page</li>
                 <li>Update the "Last Updated" date</li>
-                <li>Provide reasonable notice of significant changes</li>
+                <li>Provide reasonable notice of significant changes on our website</li>
             </ul>
             <p>By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised Terms. If you do not agree to the new Terms, please stop using the Service.</p>
             
-            <h2 id="governing-law">15. Governing Law</h2>
+            <h2 id="governing-law">16. Governing Law</h2>
             <p>These Terms shall be governed by and construed in accordance with applicable laws, without regard to conflict of law principles. Any legal action or proceeding arising under these Terms will be brought exclusively in the appropriate courts.</p>
             
-            <h2 id="severability">16. Severability</h2>
+            <h2 id="severability">17. Severability</h2>
             <p>If any provision of these Terms is held to be invalid or unenforceable, the remaining provisions will continue to be valid and enforceable to the fullest extent permitted by law.</p>
             
-            <h2 id="contact">17. Contact Us</h2>
+            <h2 id="security-acknowledgment">18. Security Acknowledgment</h2>
+            <p>You acknowledge that:</p>
+            <ul>
+                <li>We implement industry-standard security measures including HTTPS/TLS encryption, file validation, rate limiting, and authentication</li>
+                <li>Your IP address is used for rate limiting and is obtained from Cloudflare's CF-Connecting-IP header</li>
+                <li>Files undergo magic bytes verification to ensure they are valid IPA/ZIP files before processing</li>
+                <li>In production mode, detailed error messages are sanitized to prevent information disclosure</li>
+                <li>Upload ID authentication uses constant-time comparison to prevent timing attacks</li>
+                <li>Despite our security measures, no system is 100% secure</li>
+            </ul>
+            
+            <h2 id="contact">19. Contact Us</h2>
             <p>If you have any questions about these Terms, please contact us:</p>
             <ul>
                 <li><strong>Email:</strong> <a href="mailto:andres@ipachecker.qzz.io" style="color: var(--primary-color); font-weight: 600;">andres@ipachecker.qzz.io</a></li>
-                <li><strong>GitHub:</strong> <a href="https://github.com/Andres9890/ipa-encryption-checker" style="color: var(--primary-color); font-weight: 600;">Open an issue on our repository</a></li>
+                <li><strong>GitHub:</strong> <a href="https://github.com/Andres9890/ipa-encryption-checker" style="color: var(--primary-color); font-weight: 600;">Open an issue</a></li>
             </ul>
             
-            <div class="effective-date">Last Updated: September 24, 2025</div>
+            <div class="effective-date">Last Updated: October 10, 2025</div>
             
             <div class="return-link">
                 <a href="https://ipachecker.qzz.io" class="btn"><i class="fas fa-arrow-left"></i> Return to Home</a>
@@ -188,6 +266,7 @@
             <a href="./terms" style="color: var(--light-color); margin-right: 10px;">Terms of Service</a>
             <a href="./privacy" style="color: var(--light-color); margin-right: 10px;">Privacy Policy</a>
             <a href="./package" style="color: var(--light-color);">Python Package</a>
+        </p>
     </footer>
     
     <script src="script.js"></script>

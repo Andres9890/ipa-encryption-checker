@@ -37,122 +37,190 @@
             <h2 id="information-collected">2. Information We Collect</h2>
             <p>We collect only the minimal information necessary to provide our Service:</p>
             <ul>
-                <li><strong>IPA Files:</strong> Files you voluntarily upload for analysis</li>
-                <li><strong>IP Address:</strong> Your device's internet address, used solely for rate limiting (30 requests per minute, 12 uploads per hour), abuse prevention, and security</li>
-                <li><strong>File Metadata:</strong> Information extracted from uploaded IPA files during analysis (app name, version, etc.)</li>
-                <li><strong>Verification Data:</strong> CAPTCHA responses to prevent automated abuse</li>
+                <li><strong>IPA Files:</strong> Files you voluntarily upload for analysis, or URLs to IPA files you provide</li>
+                <li><strong>IP Address:</strong> Your device's internet address (obtained from Cloudflare's CF-Connecting-IP header), used solely for rate limiting (30 requests per minute, 12 uploads per hour), abuse prevention, and security</li>
+                <li><strong>File Metadata:</strong> Information extracted from uploaded IPA files during analysis (app name, version, bundle identifier, architecture, encryption status, etc.)</li>
+                <li><strong>Verification Data:</strong> CAPTCHA responses processed by Cloudflare Turnstile to prevent automated abuse</li>
+                <li><strong>Authentication Tokens:</strong> Session identifiers (Upload IDs) generated to secure your file access</li>
+                <li><strong>URL Information:</strong> If you use URL mode, the URL you provide is temporarily stored for processing</li>
             </ul>
             <p>We do not collect names, email addresses, or any other personally identifiable information unless you explicitly provide it when contacting us.</p>
             
-            <h2 id="uploaded-files">3. Uploaded Files and Analysis</h2>
-            <p>Our primary function is to analyze IPA files that you upload to our Service. When you upload an IPA file:</p>
+            <h2 id="upload-methods">3. Upload Methods</h2>
+            <p>Our Service supports two methods for submitting IPA files for analysis:</p>
             <ul>
-                <li>The file is temporarily stored on Cloudflare R2 servers for analysis purposes</li>
+                <li><strong>Direct File Upload:</strong> Upload IPA files from your device (maximum 100MB per file, 5 files per upload session)</li>
+                <li><strong>URL Mode:</strong> Provide a direct URL to an IPA file hosted elsewhere (no file size limit). The file is downloaded by our analysis system and processed through the same security and analysis pipeline</li>
+            </ul>
+            <p>For URL submissions, you must have the legal right to access and analyze the file at the provided URL. We validate that URLs end with .ipa and are properly formatted before processing.</p>
+            
+            <h2 id="uploaded-files">4. Uploaded Files and Analysis</h2>
+            <p>When you upload an IPA file or provide a URL to an IPA file:</p>
+            <ul>
+                <li><strong>File Upload Mode:</strong> The file is stored on Cloudflare R2 servers with metadata including original filename, upload IP, timestamp, and file size</li>
+                <li><strong>URL Mode:</strong> The URL is validated and passed to our analysis system, which downloads the file during processing</li>
                 <li>We automatically extract metadata from the file (app name, bundle identifier, version, minimum iOS version, architecture)</li>
                 <li>We analyze the file's encryption status using automated tools</li>
-                <li>We generate an MD5 hash of the file for verification purposes</li>
-                <li>Files are processed through GitHub Actions for automated analysis</li>
+                <li>We generate an MD5 hash of the file for verification purposes (performed in the backend analysis pipeline)</li>
+                <li>Files are processed through GitHub Actions workflows for automated analysis</li>
+                <li>A unique session identifier (Upload ID) is generated to authenticate your access to the file and results</li>
             </ul>
             
-            <h2 id="captcha-verification">4. CAPTCHA and Anti-Abuse Measures</h2>
+            <h2 id="captcha-verification">5. CAPTCHA and Anti-Abuse Measures</h2>
             <p>To prevent automated abuse, we use Cloudflare Turnstile CAPTCHA verification. When you complete a CAPTCHA challenge:</p>
             <ul>
-                <li>Your response is verified with Cloudflare's servers</li>
+                <li>Your response is sent to and verified with Cloudflare's servers</li>
                 <li>Cloudflare may process your IP address and browser information according to their privacy policy</li>
                 <li>We do not store or access the verification data beyond confirming it's valid</li>
+                <li>The verification token is used once and then discarded</li>
             </ul>
+            <p>For more information about Cloudflare Turnstile's data handling, please refer to <a href="https://www.cloudflare.com/privacypolicy/" style="color: var(--primary-color); font-weight: 600;">Cloudflare's Privacy Policy</a>.</p>
             
-            <h2 id="automated-processing">5. Automated Processing</h2>
-            <p>Our Service uses automated systems to analyze your uploaded files. This includes:</p>
+            <h2 id="automated-processing">6. Automated Processing</h2>
+            <p>Our Service uses fully automated systems to analyze your uploaded files. This includes:</p>
             <ul>
-                <li>Automated file format validation</li>
+                <li>Automated file format validation using magic bytes verification (ZIP/IPA signature check)</li>
+                <li>File size validation and content-type verification</li>
                 <li>Encryption status detection algorithms</li>
                 <li>Metadata extraction scripts</li>
-                <li>File hash generation</li>
+                <li>File hash generation (MD5)</li>
+                <li>Architecture detection (32-bit, 64-bit, Universal)</li>
             </ul>
-            <p>No human manually reviews your uploaded files unless specifically required for technical support purposes.</p>
+            <p>No human manually reviews your uploaded files unless specifically required for technical support purposes, All analysis is performed by automated scripts and tools.</p>
             
-            <h2 id="cookies">6. Cookies and Local Storage</h2>
+            <h2 id="cookies">7. Cookies and Local Storage</h2>
             <p>We use minimal local storage for:</p>
             <ul>
                 <li>Dark mode preference (stored locally in your browser)</li>
                 <li>No tracking cookies or analytics cookies are used</li>
                 <li>We do not track your browsing behavior across our site</li>
+                <li>We do not use third-party advertising or tracking services</li>
             </ul>
             
-            <h2 id="use-of-data">7. Use of Data</h2>
+            <h2 id="use-of-data">8. Use of Data</h2>
             <p>We use the collected data exclusively for:</p>
             <ul>
                 <li>Providing the IPA analysis service</li>
                 <li>Preventing abuse and ensuring fair use through rate limiting</li>
                 <li>Maintaining service security and stability</li>
                 <li>Improving the accuracy and performance of our analysis tools</li>
+                <li>Authenticating file access using session identifiers</li>
+                <li>Generating download links for processed files</li>
             </ul>
-            <p>We do not use your data for marketing, advertising, profiling, or any commercial purposes beyond providing the Service.</p>
+            <p>We do not use your data for marketing, advertising, profiling, AI training, or any commercial purposes beyond providing the Service.</p>
             
-            <h2 id="data-retention">8. Data Retention</h2>
+            <h2 id="data-retention">9. Data Retention</h2>
             <p>We have different retention periods for different types of data:</p>
             <ul>
-                <li><strong>Uploaded IPA Files:</strong> Stored temporarily on our servers for up to 1 hour for immediate analysis, then automatically deleted</li>
-                <li><strong>Analysis Results & Download Files:</strong> Stored via GitHub Actions artifacts for up to 90 days to enable download functionality</li>
-                <li><strong>IP Address Data:</strong> Retained only as long as necessary for rate limiting and security (typically 1 hour), then automatically deleted</li>
-                <li><strong>Session Data:</strong> Temporary session information is retained for up to 1 hour to coordinate the analysis process</li>
+                <li><strong>Uploaded IPA Files (File Upload Mode):</strong> Stored on Cloudflare R2 servers for up to 1 hour for immediate analysis, then automatically deleted from our primary storage</li>
+                <li><strong>URL Information (URL Mode):</strong> URLs are stored in session data for up to 1 hour, then automatically deleted</li>
+                <li><strong>Analysis Results & Download Files:</strong> Stored via GitHub Actions artifacts for up to 90 days to enable download functionality through nightly.link</li>
+                <li><strong>IP Address Data (Rate Limiting):</strong> 
+                    <ul>
+                        <li>Request rate limits: 1-minute rolling window</li>
+                        <li>Upload limits: 1-hour rolling window</li>
+                        <li>Data automatically expires after the respective time period</li>
+                    </ul>
+                </li>
+                <li><strong>Session Data:</strong> Temporary session information (including Upload IDs) is retained for up to 1 hour to coordinate the analysis process and authenticate file access</li>
+                <li><strong>Authentication Tokens:</strong> Upload IDs are stored with session data and expire after 1 hour</li>
             </ul>
-            <p>After these retention periods, all data is automatically and permanently deleted from our systems.</p>
+            <p>After these retention periods, all data is automatically and permanently deleted from our systems. GitHub artifacts are automatically deleted after 90 days by GitHub's systems.</p>
             
-            <h2 id="download-links">9. Download Functionality</h2>
+            <h2 id="download-links">10. Download Functionality</h2>
             <p>To provide download links for your processed files:</p>
             <ul>
                 <li>Processed files and analysis results are stored as GitHub Actions artifacts</li>
-                <li>Download links are provided through GitHub's artifact system</li>
+                <li>Download links are provided through nightly.link, a third-party service that generates direct download URLs for GitHub artifacts</li>
                 <li>These files remain available for download for 90 days</li>
-                <li>Access to download links requires the original upload session ID for security</li>
+                <li>Access to files during the 1-hour session window requires your original Upload ID for authentication</li>
+                <li>After the session expires, files can only be accessed through GitHub artifact download links</li>
+                <li>Download links do not require authentication after they are generated</li>
             </ul>
             
-            <h2 id="data-transfer">10. Data Transfer</h2>
+            <h2 id="authentication-security">11. Authentication and Session Security</h2>
+            <p>To protect your uploaded files and ensure secure access:</p>
+            <ul>
+                <li>Each upload generates a unique session identifier (Upload ID)</li>
+                <li>Upload IDs are required for all file operations (status checks, file access, updates, cleanup)</li>
+                <li>We use constant-time comparison for authentication tokens to prevent timing attacks</li>
+                <li>Files cannot be accessed without the correct Upload ID during the session window</li>
+                <li>Session data and authentication tokens automatically expire after 1 hour</li>
+            </ul>
+            
+            <h2 id="data-transfer">12. Data Transfer</h2>
             <p>Your information may be transferred to and processed in:</p>
             <ul>
-                <li>United States/Europe (Cloudflare R2, GitHub Actions)</li>
+                <li>United States/Europe (Cloudflare R2, Cloudflare Workers)</li>
+                <li>United States (GitHub Actions for file processing)</li>
                 <li>Other locations where our service providers operate</li>
             </ul>
             <p>All transfers are conducted with appropriate security measures. By using our Service, you consent to these transfers.</p>
             
-            <h2 id="data-security">11. Security</h2>
+            <h2 id="data-security">13. Security Measures</h2>
             <p>We implement comprehensive security measures to protect your data:</p>
             <ul>
-                <li>Encrypted file transfer (HTTPS/TLS) for all communications</li>
-                <li>Automatic file deletion after processing</li>
-                <li>Access controls limiting who can access processing systems</li>
-                <li>Regular security monitoring and updates</li>
-                <li>Rate limiting and abuse prevention systems</li>
-                <li>File format validation to prevent malicious uploads</li>
+                <li><strong>Transport Security:</strong> Encrypted file transfer (HTTPS/TLS) for all communications</li>
+                <li><strong>File Validation:</strong> 
+                    <ul>
+                        <li>Magic bytes verification to ensure valid ZIP/IPA files</li>
+                        <li>File size limits to prevent resource abuse</li>
+                        <li>Content-type validation</li>
+                    </ul>
+                </li>
+                <li><strong>Access Controls:</strong>
+                    <ul>
+                        <li>Upload ID authentication for file access</li>
+                        <li>Constant-time authentication comparison to prevent timing attacks</li>
+                        <li>IP-based rate limiting (only CF-Connecting-IP header trusted to prevent spoofing)</li>
+                    </ul>
+                </li>
+                <li><strong>Automatic Deletion:</strong> Files automatically deleted after processing (1 hour retention)</li>
+                <li><strong>Rate Limiting:</strong> 
+                    <ul>
+                        <li>30 requests per minute per IP address</li>
+                        <li>12 uploads per hour per IP address</li>
+                    </ul>
+                </li>
+                <li><strong>Request Timeouts:</strong>
+                    <ul>
+                        <li>3-minute for file uploads</li>
+                        <li>30-second for other requests</li>
+                    </ul>
+                </li>
+                <li><strong>Security Headers:</strong> Strict-Transport-Security, X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, Content-Security-Policy, Referrer-Policy</li>
+                <li><strong>Error Handling:</strong> In production, detailed error messages are sanitized to prevent information disclosure</li>
             </ul>
-            <p>While we strive to protect your data, no method of internet transmission is 100% secure. We cannot guarantee absolute security.</p>
+            <p>While we strive to protect your data, no method of internet transmission is 100% secure. We cannot guarantee absolute security but implement industry-standard protections.</p>
             
-            <h2 id="third-party-services">12. Third-Party Service Providers</h2>
+            <h2 id="third-party-services">14. Third-Party Service Providers</h2>
             <p>We work with the following third-party services that may process your data:</p>
             <ul>
                 <li><strong>GitHub Pages:</strong> Web hosting for our website</li>
                 <li><strong>GitHub Actions:</strong> Automated processing and analysis of uploaded files</li>
-                <li><strong>Cloudflare R2:</strong> Temporary file storage during analysis</li>
+                <li><strong>Cloudflare R2:</strong> Temporary file storage during analysis (1 hour retention)</li>
+                <li><strong>Cloudflare Workers:</strong> Backend API and request processing</li>
                 <li><strong>Cloudflare Turnstile:</strong> CAPTCHA verification to prevent abuse</li>
+                <li><strong>nightly.link:</strong> Third-party service for generating direct download URLs from GitHub Actions artifacts</li>
             </ul>
             <p>These providers process data according to their own privacy policies and are bound by contractual obligations to protect your information.</p>
             
-            <h2 id="analytics">13. Analytics and Tracking</h2>
+            <h2 id="analytics">15. Analytics and Tracking</h2>
             <p>We do not use:</p>
             <ul>
                 <li>Google Analytics or similar tracking services</li>
                 <li>Social media tracking pixels</li>
                 <li>Advertising networks or marketing cookies</li>
                 <li>Cross-site tracking technologies</li>
+                <li>Fingerprinting techniques</li>
+                <li>Any form of behavioral tracking</li>
             </ul>
             <p>We maintain complete privacy for all visitors and do not monitor your browsing behavior.</p>
             
-            <h2 id="childrens-privacy">14. Children's Privacy</h2>
+            <h2 id="childrens-privacy">16. Children's Privacy</h2>
             <p>Our Service is not directed to children under 13 years of age. We do not knowingly collect personal information from children under 13. If we discover that a child under 13 has provided us with personal information, we will delete such information immediately.</p>
             
-            <h2 id="your-rights">15. Your Privacy Rights</h2>
+            <h2 id="your-rights">17. Your Privacy Rights</h2>
             <p>Depending on your location, you may have rights regarding your personal information:</p>
             <ul>
                 <li><strong>Access:</strong> Request information about data we have about you</li>
@@ -163,7 +231,7 @@
             </ul>
             <p>Since we collect minimal data and automatically delete files after processing, most data is automatically removed without action needed. For any privacy concerns or to exercise your rights, contact us using the information below.</p>
             
-            <h2 id="changes-to-policy">16. Changes to This Privacy Policy</h2>
+            <h2 id="changes-to-policy">18. Changes to This Privacy Policy</h2>
             <p>We may update this Privacy Policy to reflect changes in our practices or legal requirements. When we make material changes:</p>
             <ul>
                 <li>We will post the updated policy on this page</li>
@@ -172,15 +240,15 @@
             </ul>
             <p>We encourage you to review this policy periodically for any updates.</p>
             
-            <h2 id="contact">17. Contact Us</h2>
+            <h2 id="contact">19. Contact Us</h2>
             <p>If you have questions about this Privacy Policy or want to exercise your privacy rights, please contact us:</p>
             <ul>
                 <li><strong>Email:</strong> <a href="mailto:andres@ipachecker.qzz.io" style="color: var(--primary-color); font-weight: 600;">andres@ipachecker.qzz.io</a></li>
-                <li><strong>GitHub:</strong> <a href="https://github.com/Andres9890/ipa-encryption-checker" style="color: var(--primary-color); font-weight: 600;">Open an issue on our repository</a></li>
+                <li><strong>GitHub:</strong> <a href="https://github.com/Andres9890/ipa-encryption-checker" style="color: var(--primary-color); font-weight: 600;">Open an issue</a></li>
             </ul>
             <p>We aim to respond to privacy-related inquiries within 30 days.</p>
             
-            <div class="effective-date">Last Updated: September 24, 2025</div>
+            <div class="effective-date">Last Updated: October 10, 2025</div>
             
             <div class="return-link">
                 <a href="https://ipachecker.qzz.io" class="btn"><i class="fas fa-arrow-left"></i> Return to Home</a>
@@ -195,6 +263,7 @@
             <a href="./terms" style="color: var(--light-color); margin-right: 10px;">Terms of Service</a>
             <a href="./privacy" style="color: var(--light-color); margin-right: 10px;">Privacy Policy</a>
             <a href="./package" style="color: var(--light-color);">Python Package</a>
+        </p>
     </footer>
     
     <script src="script.js"></script>
