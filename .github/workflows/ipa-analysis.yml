@@ -191,6 +191,8 @@ jobs:
               -H "X-Upload-ID: ${{ github.event.client_payload.upload_id }}" \
               -H "X-API-Key: $API_SECRET_KEY" \
               -w "%{http_code}" \
+              -o /dev/null \
+              -s \
               -d @update_payload.json \
               --max-time 30)
             
