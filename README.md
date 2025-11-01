@@ -11,7 +11,7 @@
 [License Link]: https://github.com/Andres9890/ipa-encryption-checker/blob/main/LICENSE 'MIT License.'
 
 
-# [IPA Encryption Checker](https://ipachecker.qzz.io/) (IEC)
+# [IPA Encryption Checker](https://ipachecker.qzz.io/) (IPAchecker)
 [![License Button]][License Link]
 [![Package Button]][Package Link]
 [![Terms of Service Button]][Terms of Service Link] 
