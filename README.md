@@ -39,12 +39,12 @@
 
 ## Description:
 
-A website that checks if an IPA file is encrypted via a python script (provided by norep on the iOS Obscura discord server, credits to him)
+A website that analyzes IPA files via the [IPAchecker](https://github.com/Andres9890/ipachecker) python package (original code provided by norep on the iOS Obscura discord server, credits to him)
 
 ## Tech stack:
 
 - Frontend is hosted on Github Pages
-- Backend and File uploading is hosted on a CloudFlare Worker and on CloudFlare R2
+- Backend and File uploading is hosted on a CloudFlare Worker and on CloudFlare R2 and a Github workflow
 
 ## Contact:
 Contact me through [email](mailto:andres@ipachecker.qzz.io) if you have any questions
@@ -142,7 +142,6 @@ Contact me through [email](mailto:andres@ipachecker.qzz.io) if you have any ques
 a list of todos and upcoming feature
 
   - [ ] account registration with firebase
-  - [ ] more than 100MB uploads
   - [x] how to build/set up docs
   - [ ] save analysis results as a .json file
   - [x] allow for a 90 day downloadable link for hosting the ipa and the results
