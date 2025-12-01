@@ -52,7 +52,7 @@ Contact me through [email](mailto:andres@ipachecker.qzz.io) if you have any ques
 ## How to build/set up:
 
 >[!WARNING]
-> You must use this [`tutorial branch`](https://github.com/Andres9890/ipa-encryption-checker/tree/tutorial) of the repository in order for things to work, due to the cloudflare worker not being updated anymore for security reasons
+> You must use this [`tutorial branch`](https://github.com/Andres9890/ipa-encryption-checker/tree/tutorial) of the repository in order for things to work, due to the cloudflare-worker.js not being updated anymore for security reasons
 
 ### Prerequisites
 
